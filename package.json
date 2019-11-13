@@ -1,0 +1,23 @@
+{
+  "name": "nyc-memory-map",
+  "version": "0.0.1",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack && node server.js"
+  },
+  "dependencies": {
+    "express": "^4.16.4",
+    "webpack": "^4.41.1",
+    "webpack-cli": "^3.3.10",
+    "body-parser": "^1.19.0"
+  },
+  "engines": {
+    "node": "10.x"
+  },
+  "repository": {
+    "url": "https://glitch.com/edit/#!/nyc-memory-map"
+  },
+  "license": "MIT"
+}
