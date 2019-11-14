@@ -1,11 +1,11 @@
 const path = require('path');
 
 module.exports = {
-  mode: 'production',
+  mode: 'development',
   context: path.join(__dirname, './'),
   entry: './src/app.js',
   output: {
-    path: path.join(__dirname, 'public'),
+    path: path.join(__dirname, 'server/public'),
     filename: 'bundle.js',
   },
   resolve: {
@@ -17,6 +17,11 @@ module.exports = {
         exclude: /node_modules/,
         include: path.join(__dirname, 'app'),
       },
+      {
+        test: /\.html$/,
+        exclude: /node_modules/,
+        use: {loader: 'html-loader'}
+      }
     ],
   },
   node: {
