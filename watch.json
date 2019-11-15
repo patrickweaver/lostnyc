@@ -7,13 +7,17 @@
   },
   "restart": {
     "exclude": [
-      "^public/",
-      "^dist/"
+      "^public/"
     ],
     "include": [
+      "^public\/index.html",
+      "^public\/global.css",
+      "^src\/.*.js$",
+      "^src\/.*.html",
+      "^src\/.*.svelte",
       "\\.js$",
       "\\.json"
     ]
   },
-  "throttle": 100
+  "throttle": 500
 }

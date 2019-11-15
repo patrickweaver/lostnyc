@@ -52,8 +52,8 @@ var Memory = sequelize.define('memory', {
 // Sync models to db, then create a place
 
 sequelize.sync().then(function() {
-  /*
   
+  /*
   return Place.create({
     placeId: uuidv4(),
     lat: 40.7312736,
@@ -86,6 +86,7 @@ sequelize.sync().then(function() {
     cityCouncilDistrict: 3
   });
   */
+  
 
   
 })//.then(function(place) {
@@ -154,6 +155,15 @@ app.post("/api/places/delete", async function(req, res) {
 app.get("/api/memories", async function(req, res) {
   res.json(await Memory.findAll());
 });
+
+// Memories from one place:
+app.get("/api/memories/:placeId", async function(req, res) {
+  res.json(await Memory.findAll({
+    where: {
+      placeId: req.params.placeId
+    }
+  }))
+})
 
 
 // New Memory:

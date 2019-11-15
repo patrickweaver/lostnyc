@@ -1,27 +1,36 @@
 {
-  "name": "nyc-memory-map",
+  "name": "svelte-v3",
   "version": "0.0.1",
-  "description": "",
+  "description": "cybernetically enhanced web apps",
   "main": "server/server.js",
   "scripts": {
-    "build": "webpack",
-    "start": "webpack && node server/server.js"
+    "start": "npm run build && node server/server.js",
+    "build": "rollup -c"
   },
   "dependencies": {
+    "npm-run-all": "^4.1.5",
+    "rollup": "^1.27.0",
+    "rollup-plugin-commonjs": "^10.0.2",
+    "rollup-plugin-node-resolve": "^5.1.1",
+    "rollup-plugin-svelte": "^5.1.0",
+    "svelte": "^3.14.1",
     "express": "^4.16.4",
-    "webpack": "^4.41.1",
-    "webpack-cli": "^3.3.10",
-    "body-parser": "^1.19.0",
-    "sqlite3": "^4.1.0",
     "uuid": "^3.3.3",
     "sequelize": "^6.0.0",
-    "html-loader": "^0.5.5"
+    "sqlite3": "^4.1.0",
+    "body-parser": "^1.19.0",
+    "@rollup/plugin-replace": "^2.2.1"
   },
   "engines": {
     "node": "10.x"
   },
   "repository": {
-    "url": "https://glitch.com/edit/#!/nyc-memory-map"
+    "url": "https://glitch.com/edit/#!/svelte-v3"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "keywords": [
+    "svelte",
+    "html",
+    "web"
+  ]
 }

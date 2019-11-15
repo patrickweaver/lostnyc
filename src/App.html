@@ -1,0 +1,68 @@
+<script>
+  
+  import Popup from './components/Popup.html';
+  
+  import api from './helpers/api.js';
+  import circleProps from './helpers/circleProps.js';
+  
+  var map, places, selectedPlace;
+  
+  function drawMap() {
+    map = L.map('map').setView(MAP_CENTER, MAP_ZOOM)
+    .on('click', onMapClick);
+    
+    L.tileLayer('TILE_LAYER', {
+        attribution: 'TILE_ATTRIBUTION',
+        maxZoom: 18
+    }).addTo(map);
+  }
+  
+  function drawPlace(place) {
+    var circle = L.circle([place.lat, place.long], circleProps(place.placeId))
+    .addTo(map)
+    .on('click', onMarkerClick);
+  }
+  
+  async function onMapClick(e) {
+    // Clear popup:
+    selectedPlace = null;
+  }
+  
+  function onMarkerClick(e) {
+    // Stop map click event from firing also
+    // This is a dumb way to do this but
+    // there doesn't seem to be a better way?
+    map.off('click', onMapClick);
+    setTimeout(function() {
+      map.on('click', onMapClick);
+    },50)
+
+    // Find clicked on place in places
+    for (var i in places) {
+      if (places[i].placeId === e.target.options.placeId) {
+        selectedPlace = places[i];
+        break;
+      }
+    }
+    
+  }
+  
+  (async function main() {
+    // Draw the map
+    drawMap();
+    // Get the places JSON from the api
+    places = await api.getPlaces();
+    // Draw all the places
+    for (var i in places) {
+      drawPlace(places[i]);
+    }
+
+  })();
+
+</script>
+
+<Popup {...selectedPlace} />
+
+<style>
+
+</style>
