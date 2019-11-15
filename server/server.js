@@ -25,29 +25,9 @@ const sequelize = new Sequelize('db', process.env.DB_USERNAME, process.env.DB_PA
   storage: './.data/sqlite.db'
 });
 
-// Place Model:
-var Place = sequelize.define('place', {
-  placeId: Sequelize.STRING,
-  lat: Sequelize.FLOAT,
-  long: Sequelize.FLOAT,
-  name: Sequelize.STRING,
-  streetNumber: Sequelize.STRING,
-  street: Sequelize.STRING,
-  city: Sequelize.STRING,
-  state: Sequelize.STRING,
-  zip: Sequelize.STRING,
-  openYear: Sequelize.INTEGER,
-  closeDate: Sequelize.DATE,
-  cityCouncilDistrict: Sequelize.INTEGER
-});
-
-// Memory Model:
-var Memory = sequelize.define('memory', {
-  memoryId: Sequelize.STRING,
-  placeId: Sequelize.STRING,
-  body: Sequelize.TEXT,
-  author: Sequelize.STRING
-});
+// Models
+const Place = sequelize.import(__dirname + '/models/place.js');
+const Memory = sequelize.import(__dirname + '/models/memory.js');
 
 // Sync models to db, then create a place
 
