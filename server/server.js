@@ -5,29 +5,14 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(express.static('server/public'));
 
-// Used for creating object ids:
 const uuidv4 = require('uuid/v4');
 
-/* - - - - - - - - - - - - */
-/* DB */
-/* - - - - - - - - - - - - */
-
 // Initialize DB:
-const Sequelize = require('sequelize');
-const sequelize = new Sequelize('db', process.env.DB_USERNAME, process.env.DB_PASSWORD, {
-  host: 'localhost',
-  dialect: 'sqlite',
-  pool: {
-    max: 5,
-    min: 0,
-    idle: 10000
-  },
-  storage: './.data/sqlite.db'
-});
+const sequelize = require('./db/init.js');
 
 // Models
-const Place = sequelize.import(__dirname + '/models/place.js');
-const Memory = sequelize.import(__dirname + '/models/memory.js');
+const Place = sequelize.import('./models/place.js');
+const Memory = sequelize.import('./models/memory.js');
 
 // Sync models to db, then create a place
 
@@ -78,102 +63,12 @@ sequelize.sync().then(function() {
 /* Routes: */
 /* - - - - - - - - - - - - */
 
-// All Places:
-app.get("/api/places", async function(req, res) {
-  res.json(await Place.findAll());
-});
-
-// New Place:
-app.post("/api/places/new", async function(req, res) {
-  
-  const place = {
-    placeId: uuidv4(),
-    lat: parseFloat(req.body.lat),
-    long: parseFloat(req.body.long),
-    name: req.body.name,
-    streetNumber: req.body.streetNumber,
-    street: req.body.street,
-    city: req.body.city,
-    state: req.body.state,
-    zip: req.body.zip,
-    openYear: req.body.openYear,
-    closeDate: new Date(req.body.closeDate),
-    cityCouncilDistrict: req.body.cityCouncilDistrict
-  }
-  
-  const newPlace = await Place.create(place)
-  
-  console.log("New Place:", newPlace.get())
-  res.json(newPlace.get());
-});
-
-// Delete Place:
-app.post("/api/places/delete", async function(req, res) {
-  if (process.env.API_KEY && req.body.apiKey === process.env.API_KEY) {
-    const deletedStatus = await Place.destroy({
-      where: {
-        placeId: req.body.placeId
-      }
-    });
-    
-    if (deletedStatus === 1) {
-      res.status(200).json({ deleted: true });
-      return;
-    } else {
-      res.status(400).json({deleted: false, error: "No such place"})
-    }
-  } else {
-    res.status(400).json({deleted: false, error: "Invalid or missing API Key"});
-  }
-});
-
-
-
-
-
-// All Memories:
-app.get("/api/memories", async function(req, res) {
-  res.json(await Memory.findAll());
-});
-
-// Memories from one place:
-app.get("/api/memories/:placeId", async function(req, res) {
-  res.json(await Memory.findAll({
-    where: {
-      placeId: req.params.placeId
-    }
-  }))
-})
-
-
-// New Memory:
-app.all("/api/memories/new", function(req, res) {
-  console.log('lat:', req.body.lat);
-  console.log('long:', req.body.long);
-  
-  // Save to DB
-  
-  res.status(200).json({ id: 1234 })
-});
-
-// Delete Memory:
-app.post("/api/memories/delete", async function(req, res) {
-  if (process.env.API_KEY && req.body.apiKey === process.env.API_KEY) {
-    const deletedStatus = await Memory.destroy({
-      where: {
-        memoryId: req.body.memoryId
-      }
-    });
-    if (deletedStatus === 1) {
-      res.status(200).json({ deleted: true });
-      return;
-    } else {
-      res.status(400).json({deleted: false, error: "No such memory"})
-    }
-  } else {
-    res.status(400).json({deleted: false, error: "Invalid or missing API Key"});
-  }
-});
+const memories = require('./routes/api/memories.js');
+app.use('/api/memories', memories);
+const places = require('./routes/api/places.js');
+app.use('/api/places', places);
+const flags = require('./routes/api/flags.js');
+app.use('/api/flags', flags);
 
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);

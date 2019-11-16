@@ -1,9 +1,11 @@
-const Sequelize = require('sequelize')
+const Sequelize = require('sequelize');
+const sequelize = require('../db/init.js');
+const Flag = sequelize.import('./flag.js');
 
 module.exports = (sequelize, DataTypes) => {
   class Place extends Sequelize.Model {}
   Place.init({
-    placeId: DataTypes.STRING,
+    placeId: {type: DataTypes.STRING, primaryKey: true},
     lat: DataTypes.FLOAT,
     long: DataTypes.FLOAT,
     name: DataTypes.STRING,
@@ -16,5 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     closeDate: DataTypes.DATE,
     cityCouncilDistrict: DataTypes.INTEGER
   }, { sequelize });
+  
+  Place.hasMany(Flag, {foreignKey: 'placeId', targetKey: 'placeId', as: 'flags'});
+  
   return Place;
 }
