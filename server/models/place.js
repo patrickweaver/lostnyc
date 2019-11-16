@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../db/init.js');
+const Memory = sequelize.import('./memory.js');
 const Flag = sequelize.import('./flag.js');
 
 module.exports = (sequelize, DataTypes) => {
@@ -20,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
   }, { sequelize });
   
   Place.hasMany(Flag, {foreignKey: 'placeId', targetKey: 'placeId', as: 'flags'});
+  Place.hasMany(Memory, {foreignKey: 'placeId', targetKey: 'placeId', as: 'memories'});
   
   return Place;
 }

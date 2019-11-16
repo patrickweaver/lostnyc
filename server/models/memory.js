@@ -6,7 +6,6 @@ module.exports = (sequelize, DataTypes) => {
   class Memory extends Sequelize.Model {}
   Memory.init({
     memoryId: {type: DataTypes.STRING, primaryKey: true},
-    placeId: Sequelize.STRING,
     body: Sequelize.TEXT,
     author: Sequelize.STRING
   }, { sequelize });

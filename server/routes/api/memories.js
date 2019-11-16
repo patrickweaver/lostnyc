@@ -25,13 +25,15 @@ router.get("/:placeId", async function(req, res) {
 
 
 // New Memory:
-router.all("/new", function(req, res) {
-  console.log('lat:', req.body.lat);
-  console.log('long:', req.body.long);
-  
-  // Save to DB
-  
-  res.status(200).json({ id: 1234 })
+router.all("/new", async function(req, res) {
+  const memory = {
+    memoryId: uuidv4(),
+    body: req.body.memoryBody,
+    author: req.body.author,
+    placeId: req.body.placeId
+  }
+  const newMemory = await Memory.create(memory);
+  res.json(newMemory.get());
 });
 
 // Delete Memory:

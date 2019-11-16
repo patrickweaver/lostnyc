@@ -2,6 +2,7 @@ const router = require('express').Router();
 const Sequelize = require('sequelize');
 const sequelize = require('../../db/init.js');
 const Place = sequelize.import('../../models/place.js');
+const Memory = sequelize.import('../../models/memory.js');
 const Flag = sequelize.import('../../models/flag.js');
 
 const uuidv4 = require('uuid/v4');
@@ -9,8 +10,14 @@ const uuidv4 = require('uuid/v4');
 // All Places:
 router.get("/", async function(req, res) {
   res.json(await Place.findAll({
-    attributes: { include: [[sequelize.fn('COUNT', sequelize.col('flags.flagId')), 'flagsCount']] },
-    include: [{model: Flag, as: 'flags', attributes: []}],
+    attributes: { include: [
+      [sequelize.fn('COUNT', sequelize.col('flags.flagId')), 'flagsCount'],
+      [sequelize.fn('COUNT', sequelize.col('memories.memoryId')), 'memoriesCount']
+    ]},
+    include: [
+      {model: Flag, as: 'flags', attributes: []},
+      {model: Memory, as: 'memories', attributes: []}
+    ],
     group: ['place.placeId']
   }));
 });
@@ -38,18 +45,6 @@ router.post("/new", async function(req, res) {
   console.log("New Place:", newPlace.get())
   res.json(newPlace.get());
 });
-
-/*
-Post.update({
-  updatedAt: null,
-}, {
-  where: {
-    deletedAt: {
-      $ne: null
-    }
-  }
-});
-*/
 
 // Delete Place:
 router.post("/delete", async function(req, res) {
