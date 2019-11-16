@@ -1,12 +1,17 @@
 const router = require('express').Router();
 const sequelize = require('../../db/init.js');
 const Memory = sequelize.import('../../models/memory.js');
+const Flag = sequelize.import('../../models/flag.js');
 
 const uuidv4 = require('uuid/v4');
 
 // All Memories:
 router.get("/", async function(req, res) {
-  res.json(await Memory.findAll());
+  res.json(await Memory.findAll({
+    attributes: { include: [[sequelize.fn('COUNT', sequelize.col('flags.flagId')), 'flagsCount']] },
+    include: [{model: Flag, as: 'flags', attributes: []}],
+    group: ['place.placeId']
+  }));
 });
 
 // Memories from one place:
