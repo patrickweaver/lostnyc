@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const rp = require('request-promise');
 const Sequelize = require('sequelize');
 const sequelize = require('../../db/init.js');
 const Place = sequelize.import('../../models/place.js');
@@ -24,14 +25,24 @@ router.get("/", async function(req, res) {
 
 // New Place:
 router.post("/new", async function(req, res) {
+  const geolocationOptions = {
+    uri: 'https://maps.googleapis.com/maps/api/geocode/json',
+    qs: {
+      address: `${req.body.address}+${req.body.city}+${req.body.state}+${req.body.zip}`,
+      key: process.env.GCP_API_KEY
+    }
+  }
+  const geolocationResponse = JSON.parse(await rp(geolocationOptions));
+  console.log(geolocationResponse);
+  const location = geolocationResponse.results[0].geometry.location
   
   const place = {
     placeId: uuidv4(),
-    lat: parseFloat(req.body.lat),
-    long: parseFloat(req.body.long),
+    lat: parseFloat(location.lat),
+    long: parseFloat(location.lng),
     name: req.body.name,
     streetNumber: req.body.streetNumber,
-    street: req.body.street,
+    street: req.body.address,
     city: req.body.city,
     state: req.body.state,
     zip: req.body.zip,
