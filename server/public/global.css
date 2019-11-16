@@ -2,10 +2,14 @@
   box-sizing: border-box;
 }
 
+body {
+  margin: 0;
+}
+
 #map {
   height: 100vh;
   flex: 0 0 60%;
-  border: 2px solid green;
   z-index: 1;
+  cursor: default;
 }
   

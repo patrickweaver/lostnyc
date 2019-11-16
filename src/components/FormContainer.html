@@ -1,0 +1,32 @@
+<script>
+  export let form;
+  
+  import NewPlaceForm from './forms/NewPlace.html';
+</script>
+
+<div id="form-container">
+  <NewPlaceForm />
+</div>
+
+<style>
+  #form-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: Calc(100vw - 40px);
+    height: Calc(100vh - 40px);
+    margin: 20px;
+    padding: 20px;
+    border: 2px solid #444;
+    background-color: white;
+    border-radius: 5px;
+    z-index: 5;
+  }
+  
+  :global(label), :global(input) {
+    display: block;
+    font-size: 16px;
+  }
+  
+  
+</style>

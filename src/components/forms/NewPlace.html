@@ -1,0 +1,38 @@
+<script>
+  import Button from '../Button.html';
+  
+  function submitForm() {
+    alert("click");
+  }
+  
+  
+</script>
+
+<div id="new-place-form">
+  <h1>
+    New Place
+  </h1>
+  <form>
+    <label>Name:</label>
+    <input name="name" type="text" autocomplete="off" />
+    <label>Address:</label>
+    <input name="address" type="text" autocomplete="off" />
+    <label>City:</label>
+    <input name="city" type="text" autocomplete="off" />
+    <label>State:</label>
+    <input name="state" type="text" autocomplete="off" value="NY"/>
+    <label>Zip:</label>
+    <input name="zip" type="number" autocomplete="off" />
+    <label>Year Opened:</label>
+    <input name="openYear" type="number" autocomplete="off" />
+    <label>Date Closed:</label>
+    <input name="closeDate" type="date" autocomplete="off" />
+    <Button label={"save"} onClick={submitForm} />
+  </form>
+</div>
+
+
+<style>
+
+
+</style>

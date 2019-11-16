@@ -1,5 +1,7 @@
 <script>
   
+  import Button from './components/Button.html';
+  import FormContainer from './components/FormContainer.html';
   import Popup from './components/Popup.html';
   
   import api from './helpers/api.js';
@@ -64,6 +66,8 @@
 
 </script>
 
+<FormContainer />
+<Button label={"New Place"} />
 <Popup {...selectedPlace} />
 
 <style>

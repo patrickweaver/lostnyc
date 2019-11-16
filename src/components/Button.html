@@ -1,0 +1,25 @@
+<script>
+  export let label;
+  export let onClick;
+</script>
+
+<button class="button" on:click|preventDefault={onClick}>{label}</button>
+
+<style>
+  .button {
+    z-index: 2;
+    position: absolute;
+    bottom: 40px;
+    right: 20px;
+    background-color: #fe3d89;
+    border: 2px solid black;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 3px;
+  }
+
+  .button:hover {
+    background-color: #d93476;
+  }
+</style>
