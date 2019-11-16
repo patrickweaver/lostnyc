@@ -1,10 +1,15 @@
 <script>
+  export let form
   import NewPlaceForm from './forms/NewPlace.html';
 </script>
 
+{#if form}
 <div id="form-container">
+  {#if form === 'newPlace'}
   <NewPlaceForm />
+  {/if}
 </div>
+{/if}
 
 <style>
   #form-container {
