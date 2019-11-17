@@ -8,11 +8,7 @@
 
   var map;
 
-  var state = {
-    places: [],
-    selectedPlace: null,
-    form: null
-  };
+  import { places, selectedPlace, form } from "./stores.js";
 
   function drawMap() {
     map = L.map("map")
@@ -26,6 +22,7 @@
   }
 
   function drawPlace(place) {
+    //console.log(place);
     if (!place.lat || !place.long) {
       return;
     }
@@ -36,7 +33,7 @@
 
   async function onMapClick(e) {
     // Clear popup:
-    state.selectedPlace = null;
+    selectedPlace.update(n => null);
   }
 
   function onMarkerClick(e) {
@@ -49,32 +46,40 @@
     }, 50);
 
     // Find clicked on place in places
-    for (var i in state.places) {
-      if (state.places[i].placeId === e.target.options.placeId) {
-        state.selectedPlace = state.places[i];
+    for (var i in $places) {
+      if ($places[i].placeId === e.target.options.placeId) {
+        selectedPlace.update(n => $places[i]);
         break;
       }
     }
   }
-  
+
   function onNewPlaceButtonClick() {
-    state.form = 'newPlace'
+    form.update(n => "newPlace");
   }
 
   (async function main() {
     // Draw the map
     drawMap();
     // Get the places JSON from the api
-    state.places = await api.getPlaces();
+    const placesApiResponse = await api.getPlaces();
+    places.update(n => placesApiResponse);
     // Draw all the places
-    for (var i in state.places) {
-      drawPlace(state.places[i]);
+    for (var i in $places) {
+      drawPlace($places[i]);
     }
   })();
 </script>
 
-<FormContainer form="{state.form}" />
-<Button label={"New Place"} onClick={onNewPlaceButtonClick} />
-<Popup {...state.selectedPlace} />
+<h3 class="debug">
+  {#if $selectedPlace}
+  {$selectedPlace.name}
+  {:else}
+  No Selected Place
+  {/if}
+</h3>
+<FormContainer drawPlace="{drawPlace}" />
+<Button label={'New Place'} type={'create'} onClick={onNewPlaceButtonClick} />
+<Popup {...$selectedPlace} />
 
 <style></style>

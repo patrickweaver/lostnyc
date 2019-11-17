@@ -12,4 +12,15 @@ body {
   z-index: 1;
   cursor: default;
 }
+
+.debug {
+  background-color: pink;
+  color: purple;
+  z-index: 100;
+  border: 3px solid green;
+  padding: 10px;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
   

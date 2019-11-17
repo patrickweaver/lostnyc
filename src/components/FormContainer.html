@@ -1,12 +1,22 @@
 <script>
-  export let form
+  import { form } from '../stores.js';
   import NewPlaceForm from './forms/NewPlace.html';
+  
+  export let drawPlace
+  
+  function closeForm() {
+    form.update(n => null);
+  }
+  
 </script>
 
-{#if form}
+{#if $form}
 <div id="form-container">
-  {#if form === 'newPlace'}
-  <NewPlaceForm />
+  {#if $form === 'newPlace'}
+  <NewPlaceForm
+    closeForm={closeForm}
+    drawPlace={drawPlace}
+  />
   {/if}
 </div>
 {/if}
