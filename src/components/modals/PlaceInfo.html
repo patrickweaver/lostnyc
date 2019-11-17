@@ -1,69 +1,70 @@
 <script>
-  import { beforeUpdate } from 'svelte';
-  import { selectedPlace, modalItem } from '../../stores.js';
-  
+  import { beforeUpdate } from "svelte";
+  import { modalItem, selectedPlace, selectedMemory } from "../../stores.js";
+
   import Button from "../Button.html";
-  
+
+  export let closeModal;
+
   beforeUpdate(async () => {
     console.log("beforeUpdate");
     if (!$selectedPlace.name) {
       const res = await fetch(`/api/places/find/${$selectedPlace.placeId}`);
-      const placeWithMemories =  await res.json();
+      const placeWithMemories = await res.json();
       console.log(placeWithMemories[0]);
       selectedPlace.update(n => placeWithMemories[0]);
     }
-	});
+  });
 
-  const closeYear = $selectedPlace.closeDate ? new Date($selectedPlace.closeDate).getFullYear() : null;
-  
+  const closeYear = $selectedPlace.closeDate
+    ? new Date($selectedPlace.closeDate).getFullYear()
+    : null;
+
   function onNewMemoryButtonClick() {
     modalItem.update(n => "newMemory");
     // Don't reset selectedPlace here
   }
+
+  function seeFullMemory(index) {
+    selectedMemory.update(n => $selectedPlace.memories[index]);
+    modalItem.update(n => "memory");
+  }
+  
   
 </script>
+
+<button class="text-button close-modal" on:click={closeModal}>
+  Close
+</button>
 
 {#if $selectedPlace.name}
 <div>
   <h2>{$selectedPlace.name}</h2>
   <h3>
-    {#if $selectedPlace.openYear}
-      {$selectedPlace.openYear} - 
-    {:else}
-    Unknown - 
-    {/if}
-    {#if $selectedPlace.closeYear}
-      {closeYear}
-    {:else}
-      Unknown
-    {/if}
+    {#if $selectedPlace.openYear} {$selectedPlace.openYear} - {:else} Unknown -
+    {/if} {#if $selectedPlace.closeYear} {closeYear} {:else} Unknown {/if}
   </h3>
   <p>
-    {$selectedPlace.address}<br/>
+    {$selectedPlace.address}<br />
     {$selectedPlace.city}
   </p>
-  
-  <Button
-    label={'New Memory'}
-    type={'create'}
-    onClick={onNewMemoryButtonClick}
-  />
-  
+
+  <Button label={'New Memory'} type={'create'} onClick={onNewMemoryButtonClick}
+  /> {#if $selectedPlace.memories}
   <ul>
-  {#each $selectedPlace.memories as memory}
+    {#each $selectedPlace.memories as memory, index}
     <li>
-      <p>
-        {memory.body}
-      </p>
+      <p>{memory.body} <span class="text-button" on:click="{() => seeFullMemory(index)}">Read More</span></p>
       <p>
         - {memory.author}
       </p>
     </li>
-  {/each}
+    {/each}
   </ul>
+  {/if}
 </div>
 {/if}
 
 <style>
-
+  
 </style>

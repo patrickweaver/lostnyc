@@ -5,7 +5,7 @@
   export let closeForm;
   export let drawPlace;
 
-  import { places, modalItem } from "../../stores.js";
+  import { places, selectedPlace, modalItem } from "../../stores.js";
 
   let placeInput = { state: "NY" };
 
@@ -18,8 +18,8 @@
     var response = await fetch(url, options);
     const responseJson = await response.json();
     addPlace(responseJson);
-    modalItem.update(n => null); // Close form
-    return responseJson;
+    selectedPlace.update(n => responseJson);
+    modalItem.update(n => 'selectedPlace');
   }
   
   function addPlace(place) {
@@ -58,8 +58,8 @@
     />
     <label>Date Closed:</label>
     <input bind:value="{placeInput.closeDate}" type="date" autocomplete="off" />
-    <Button label={'Cancel'} type={'cancel'} onClick={closeForm} />
     <Button label={'Save'} type={'create'} onClick={submitForm} />
+    <Button label={'Cancel'} type={'cancel'} onClick={closeForm} />
   </form>
 </div>
 

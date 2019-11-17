@@ -1,0 +1,22 @@
+<script>
+  import { modalItem, selectedMemory } from "../../stores.js";
+  
+  function returnToPlace() {
+    modalItem.upate(n => 'selectedPlace');
+  }
+  
+  function closeModal() {
+    modalItem.update(n => 'selectedPlace');
+    selectedMemory.update(n => null);   
+  }
+
+</script>
+
+<button class="text-button close-modal" on:click={closeModal}>
+  Back to Place
+</button>
+
+<div id="memory">
+  <p>{$selectedMemory.body}</p>
+  <p>{$selectedMemory.author}</p>
+</div>

@@ -1,0 +1,64 @@
+<script>
+  import Button from "../Button.html";
+  import fetchOptions from "../../helpers/fetchOptions.js";
+
+  export let closeForm;
+
+  
+  import { modalItem, selectedMemory, selectedPlace } from "../../stores.js";
+  
+  var flagInput = {body:''};
+  if ($selectedPlace) {
+    flagInput.placeId = $selectedPlace.placeId;
+  }
+  if ($selectedMemory) {
+    flagInput.memoryId = $selectedMemory.memoryId;
+  }
+  
+  var flagType;
+  if ($modalItem === 'placeFlag') {
+    flagType = 'place';
+  } else if ($modalItem === 'memoryFlag') {
+    flagType = 'memory';
+  }
+
+  async function submitForm() {
+    const url = "/api/flags/new";
+    const options = Object.assign(
+      { body: JSON.stringify(flagInput) },
+      fetchOptions.post
+    );
+    var response = await fetch(url, options);
+    const responseJson = await response.json();
+    // Back to place
+    modalItem.update(n => 'message');
+  }
+  
+</script>
+
+<div id="new-memory-form" class="form">
+  <h3>
+    Flag 
+    {#if $modalItem === 'placeFlag'}
+      {$selectedPlace.name}:
+    {:else if $modalItem === 'memoryFlag'}
+      Memory:
+    {/if}
+  </h3>
+  <p>
+    Please describe any issues with this {flagType}. If the content shown is inappropriate please include the phrase <strong>"Inappropriate Content"</strong>.
+  </p>
+  <p>
+    If there are issues with the accuracy of the details of a place please let us know. If you would like us to reach out to you about this issue please incude an email address. Thanks!
+  </p>
+  
+  <form>
+    <textarea bind:value={flagInput.body} placeholder="This {flagType} should be flagged because . . ."></textarea>
+    <Button label={'Save'} type={'create'} onClick={submitForm} />
+    <Button label={'Cancel'} type={'cancel'} onClick={closeForm} />
+  </form>
+  
+</div>
+
+<style>
+</style>

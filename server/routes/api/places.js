@@ -31,7 +31,8 @@ router.get("/find/:placeId", async function(req, res) {
       placeId: req.params.placeId
     },
     include: [
-      {model: Memory, as: 'memories'}
+      {model: Memory, as: 'memories'},
+      {model: Flag, as: 'flags'}
     ]
   }));
 })

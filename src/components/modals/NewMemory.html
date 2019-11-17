@@ -6,7 +6,7 @@
 
   import { places, selectedPlace, modalItem } from "../../stores.js";
   
-  var memoryInput = {};
+  var memoryInput = {placeId: $selectedPlace.placeId};
 
   async function submitForm() {
     const url = "/api/memories/new";
@@ -18,9 +18,8 @@
     const responseJson = await response.json();
     addMemoryToPlace(responseJson);
     
-    // Switch this to go back to selected place view
-    modalItem.update(n => null); // Close form
-    return responseJson;
+    // Back to place
+    modalItem.update(n => 'selectedPlace');
   }
   
   function addMemoryToPlace(memory) {
@@ -28,6 +27,7 @@
       n.memories.push(memory);
       return n;
     });
+
   }
   
   
@@ -38,12 +38,13 @@
     New Memory of {$selectedPlace.name}
   </h1>
   <form>
-    <input bind:value="{memoryInput.body}" type="text" autocomplete="off" preview="What do you remember about {$selectedPlace.name}"/>
+    <textarea bind:value={memoryInput.body} placeholder="What do you remember about {$selectedPlace.name}"></textarea>
     <label>Author: (Optional)</label>
-    <input bind:value="{memoryInput.body}" type="text" autocomplete="off" />
-    <Button label={'Cancel'} type={'cancel'} onClick={closeForm} />
+    <input bind:value={memoryInput.author} type="text" autocomplete="off" />
     <Button label={'Save'} type={'create'} onClick={submitForm} />
+    <Button label={'Cancel'} type={'cancel'} onClick={closeForm} />
   </form>
 </div>
 
-<style></style>
+<style>
+</style>

@@ -10,7 +10,7 @@ router.get("/", async function(req, res) {
   res.json(await Memory.findAll({
     attributes: { include: [[sequelize.fn('COUNT', sequelize.col('flags.flagId')), 'flagsCount']] },
     include: [{model: Flag, as: 'flags', attributes: []}],
-    group: ['place.placeId']
+    group: ['memory.memoryId']
   }));
 });
 
@@ -28,7 +28,7 @@ router.get("/:placeId", async function(req, res) {
 router.all("/new", async function(req, res) {
   const memory = {
     memoryId: uuidv4(),
-    body: req.body.memoryBody,
+    body: req.body.body,
     author: req.body.author,
     placeId: req.body.placeId
   }

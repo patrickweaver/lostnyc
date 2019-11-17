@@ -29,11 +29,15 @@
       .addTo(map)
       .on("click", onMarkerClick);
   }
-
-  async function onMapClick(e) {
-    // Clear popup:
+  
+  function returnToMap() {
+    // Clear modal:
     selectedPlace.update(n => null);
     modalItem.update(n => null);
+  }
+
+  function onMapClick(e) {
+    returnToMap();
   }
 
   function onMarkerClick(e) {
@@ -67,16 +71,19 @@
   })();
 </script>
 
+<ModalContainer
+  drawPlace={drawPlace}
+  returnToMap={returnToMap}
+/>
+<span id="new-place-button"><Button label={'New Place'} type={'create'} onClick={onNewPlaceButtonClick} /></span>
+
 <div class="debug">
   <h3>
     {$modalItem}
   </h3>
+  <p>
+  </p>
 </div>
-
-<ModalContainer
-  drawPlace={drawPlace}
-/>
-<span id="new-place-button"><Button label={'New Place'} type={'create'} onClick={onNewPlaceButtonClick} /></span>
 
 <style>
   #new-place-button {

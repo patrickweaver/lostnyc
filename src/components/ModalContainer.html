@@ -1,17 +1,30 @@
 <script>
   import { modalItem, selectedPlace } from '../stores.js';
+  import fetchOptions from "../helpers/fetchOptions.js";
   
   // subcomponents
+  import Memory from './modals/Memory.html';
+  import NewFlag from './modals/NewFlag.html';
   import NewMemoryForm from './modals/NewMemory.html';
+  import Message from './modals/Message.html';
   import NewPlaceForm from './modals/NewPlace.html';
   import PlaceInfo from './modals/PlaceInfo.html';
   
-  export let drawPlace
+  export let drawPlace;
+  export let returnToMap;
   
   const displayPlaceInfo = '';
   
   function closeForm() {
-    modalItem.update(n => null);
+    if ($selectedPlace && $selectedPlace.name) {
+      modalItem.update(n => 'selectedPlace');
+    } else {
+      returnToMap()
+    }
+  }
+  
+  function flagItem(type) {
+    modalItem.update(n => type)
   }
   
 </script>
@@ -28,14 +41,31 @@
       <NewMemoryForm
         closeForm={closeForm}
       />
-    {/if}
-  
-    {#if $modalItem === 'selectedPlace' && $selectedPlace}
+    {:else if $modalItem === 'memory'}
+      <Memory      
+      />
+    {:else if $modalItem === 'placeFlag' || $modalItem === 'memoryFlag'}
+      <NewFlag
+        closeForm={closeForm}
+      />
+    {:else if $modalItem === 'message'}
+      <Message returnToMap={returnToMap} />
+    
+    {:else if $modalItem === 'selectedPlace' && $selectedPlace}
       <PlaceInfo
-
+        closeModal={returnToMap}
       />
     {/if}
   
+    {#if $modalItem === 'selectedPlace' && $selectedPlace}
+      <button class="flag-button text-button" on:click="{() => flagItem('placeFlag')}">
+        Click here to flag if this place is wrong or inappropriate.
+      </button>
+    {:else if $modalItem === 'memory'}
+      <button class="flag-button text-button" on:click="{() => flagItem('memoryFlag')}">
+        Click here to flag if this memory is inappropriate or on the incorrect place.
+      </button>
+    {/if}
   </div>
 {/if}
 
@@ -54,10 +84,37 @@
     min-height: 400px;
   }
   
-  :global(label), :global(input) {
+  .flag-button {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin: 5px;
+  }
+  
+  :global(label), :global(input), :global(textarea) {
     display: block;
     font-size: 18px;
     line-height: 20px;
+    width: 100%;
+  }
+  
+  :global(textarea) {
+    min-height: 6em;
+  }
+  
+  :global(.close-modal) {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  :global(.text-button) {
+    border: none;
+    background-color: inherit;
+    text-decoration: underline;
+    cursor: pointer;
   }
   
   

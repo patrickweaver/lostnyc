@@ -13,7 +13,7 @@ router.get("/", async function(req, res) {
 router.post("/new", async function(req, res) {
   const flag = {
     flagId: uuidv4(),
-    body: req.body.flagBody,
+    body: req.body.body,
     placeId: req.body.placeId,
     memoryId: req.body.memoryId
   }

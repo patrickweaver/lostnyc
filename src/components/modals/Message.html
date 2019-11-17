@@ -1,0 +1,20 @@
+<script>
+  
+  export let returnToMap;
+  let messageBody = 'We will take a look at the item you flagged. If it is inappropriate it will be removed.';
+
+</script>
+
+<button class="text-button close-modal" on:click={returnToMap}>
+  Back to Map
+</button>
+
+<div>
+  <h2>Thank you for flagging this.</h2>
+  <p>{messageBody}</p>
+  
+  <button class="text-button" on:click={returnToMap}>
+  Done
+  </button>
+  
+</div>
