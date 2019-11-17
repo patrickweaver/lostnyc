@@ -23,6 +23,19 @@ router.get("/", async function(req, res) {
   }));
 });
 
+// Single Place with Memories:
+router.get("/find/:placeId", async function(req, res) {
+  res.json(await Place.findAll({
+    limit: 1,
+    where: {
+      placeId: req.params.placeId
+    },
+    include: [
+      {model: Memory, as: 'memories'}
+    ]
+  }));
+})
+
 // New Place:
 router.post("/new", async function(req, res) {
   const geolocationOptions = {
@@ -41,8 +54,7 @@ router.post("/new", async function(req, res) {
     lat: parseFloat(location.lat),
     long: parseFloat(location.lng),
     name: req.body.name,
-    streetNumber: req.body.streetNumber,
-    street: req.body.address,
+    address: req.body.address,
     city: req.body.city,
     state: req.body.state,
     zip: req.body.zip,

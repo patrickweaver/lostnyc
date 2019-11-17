@@ -3,55 +3,46 @@
   import fetchOptions from "../../helpers/fetchOptions.js";
 
   export let closeForm;
-  export let drawPlace;
 
-  import { places, modalItem } from "../../stores.js";
-
-  let placeInput = { state: "NY" };
+  import { places, selectedPlace, modalItem } from "../../stores.js";
+  
+  var memoryInput = {};
 
   async function submitForm() {
-    const url = "/api/places/new";
+    const url = "/api/memories/new";
     const options = Object.assign(
-      { body: JSON.stringify(placeInput) },
+      { body: JSON.stringify(memoryInput) },
       fetchOptions.post
     );
     var response = await fetch(url, options);
     const responseJson = await response.json();
-    console.log(JSON.stringify(responseJson));
-    places.update(n => n.push(responseJson));
-    drawPlace(responseJson);
-    modalItem.update(n => null);
+    addMemoryToPlace(responseJson);
+    
+    // Switch this to go back to selected place view
+    modalItem.update(n => null); // Close form
     return responseJson;
   }
+  
+  function addMemoryToPlace(memory) {
+    selectedPlace.update(n => {
+      n.memories.push(memory);
+      return n;
+    });
+  }
+  
+  
 </script>
 
-<div id="new-place-form">
+<div id="new-memory-form" class="form">
   <h1>
-    New Place
+    New Memory of {$selectedPlace.name}
   </h1>
   <form>
-    <label>Name:</label>
-    <input bind:value="{placeInput.name}" type="text" autocomplete="off" />
-    <label>Address:</label>
-    <input bind:value="{placeInput.address}" type="text" autocomplete="off" />
-    <label>City:</label>
-    <input bind:value="{placeInput.city}" type="text" autocomplete="off" />
-    <label>State:</label>
-    <input bind:value="{placeInput.state}" type="text" autocomplete="off" />
-    <label>Zip:</label>
-    <input bind:value="{placeInput.zip}" type="text" autocomplete="off" />
-    <label>Year Opened:</label>
-    <input
-      bind:value="{placeInput.openYear}"
-      min="1800"
-      max="2020"
-      type="number"
-      autocomplete="off"
-    />
-    <label>Date Closed:</label>
-    <input bind:value="{placeInput.closeDate}" type="date" autocomplete="off" />
-    <Button label={'Cancel'} type={'cancel'} onClick={closeForm} /> <Button
-    label={'save'} type={'create'} onClick={submitForm} />
+    <input bind:value="{memoryInput.body}" type="text" autocomplete="off" preview="What do you remember about {$selectedPlace.name}"/>
+    <label>Author: (Optional)</label>
+    <input bind:value="{memoryInput.body}" type="text" autocomplete="off" />
+    <Button label={'Cancel'} type={'cancel'} onClick={closeForm} />
+    <Button label={'Save'} type={'create'} onClick={submitForm} />
   </form>
 </div>
 

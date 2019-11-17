@@ -2,6 +2,7 @@
   import { modalItem, selectedPlace } from '../stores.js';
   
   // subcomponents
+  import NewMemoryForm from './modals/NewMemory.html';
   import NewPlaceForm from './modals/NewPlace.html';
   import PlaceInfo from './modals/PlaceInfo.html';
   
@@ -23,6 +24,10 @@
         closeForm={closeForm}
         drawPlace={drawPlace}
       />
+    {:else if $modalItem === 'newMemory'}
+      <NewMemoryForm
+        closeForm={closeForm}
+      />
     {/if}
   
     {#if $modalItem === 'selectedPlace' && $selectedPlace}
@@ -38,16 +43,21 @@
   #modal-container {
     z-index: 100;
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 0px;
+    right: 0px;
     background-color: #eee;
     border: 2px solid black;
-    padding: 5px;
+    padding: 10px;
+    margin: 20px;
+    width: Calc(100vw - 40px);
+    max-width: 600px;
+    min-height: 400px;
   }
   
   :global(label), :global(input) {
     display: block;
-    font-size: 16px;
+    font-size: 18px;
+    line-height: 20px;
   }
   
   

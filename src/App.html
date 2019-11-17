@@ -37,7 +37,6 @@
   }
 
   function onMarkerClick(e) {
-    console.log('marker click');
     // Stop map click event from firing also
     // This is a dumb way to do this but
     // there doesn't seem to be a better way?
@@ -45,21 +44,14 @@
     setTimeout(function() {
       map.on("click", onMapClick);
     }, 50);
-
-    // Find clicked on place in places
-    console.log('clicked:', e.target.options.placeId)
-    for (var i in $places) {
-      console.log($places[i].placeId);
-      if ($places[i].placeId === e.target.options.placeId) {
-        selectedPlace.update(n => $places[i]);
-        modalItem.update(n => 'selectedPlace');
-        break;
-      }
-    }
+    modalItem.update(n => 'selectedPlace');
+    const placeStub = {placeId: e.target.options.placeId}
+    selectedPlace.update(n => placeStub);
   }
 
   function onNewPlaceButtonClick() {
     modalItem.update(n => "newPlace");
+    selectedPlace.update(n => null)
   }
 
   (async function main() {
@@ -79,15 +71,18 @@
   <h3>
     {$modalItem}
   </h3>
-  <ol>
-    {#each $places as place, i}
-      <li>{i}: {place.name}</li>
-    {/each}
-  </ol>
 </div>
 
 <ModalContainer
   drawPlace={drawPlace}
 />
-<Button label={'New Place'} type={'create'} onClick={onNewPlaceButtonClick} />
-<style></style>
+<span id="new-place-button"><Button label={'New Place'} type={'create'} onClick={onNewPlaceButtonClick} /></span>
+
+<style>
+  #new-place-button {
+    z-index: 2;
+    position: absolute;
+    bottom: 30px;
+    right: 20px;
+  }
+</style>

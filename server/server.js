@@ -13,9 +13,12 @@ const uuidv4 = require('uuid/v4');
 // Initialize DB:
 const sequelize = require('./db/init.js');
 
-// Models
-//const Place = sequelize.import('./models/place.js');
-//const Memory = sequelize.import('./models/memory.js');
+
+// Maybe only have this happen if the db or tables don't exist
+const Place = sequelize.import('./models/place.js');
+const Memory = sequelize.import('./models/memory.js');
+const Flag = sequelize.import('./models/flag.js');
+sequelize.sync();
 
 if (populate) {
   require('./db/populate.js')();

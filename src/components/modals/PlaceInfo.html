@@ -1,14 +1,66 @@
 <script>
-  import { selectedPlace } from '../../stores.js';
+  import { beforeUpdate } from 'svelte';
+  import { selectedPlace, modalItem } from '../../stores.js';
+  
+  import Button from "../Button.html";
+  
+  beforeUpdate(async () => {
+    console.log("beforeUpdate");
+    if (!$selectedPlace.name) {
+      const res = await fetch(`/api/places/find/${$selectedPlace.placeId}`);
+      const placeWithMemories =  await res.json();
+      console.log(placeWithMemories[0]);
+      selectedPlace.update(n => placeWithMemories[0]);
+    }
+	});
 
-  const closeYear = new Date($selectedPlace.closeDate).getFullYear();
+  const closeYear = $selectedPlace.closeDate ? new Date($selectedPlace.closeDate).getFullYear() : null;
+  
+  function onNewMemoryButtonClick() {
+    modalItem.update(n => "newMemory");
+    // Don't reset selectedPlace here
+  }
   
 </script>
 
-{#if $selectedPlace.placeId}
+{#if $selectedPlace.name}
 <div>
   <h2>{$selectedPlace.name}</h2>
-  <h3>{$selectedPlace.openYear} - {closeYear}</h3>
+  <h3>
+    {#if $selectedPlace.openYear}
+      {$selectedPlace.openYear} - 
+    {:else}
+    Unknown - 
+    {/if}
+    {#if $selectedPlace.closeYear}
+      {closeYear}
+    {:else}
+      Unknown
+    {/if}
+  </h3>
+  <p>
+    {$selectedPlace.address}<br/>
+    {$selectedPlace.city}
+  </p>
+  
+  <Button
+    label={'New Memory'}
+    type={'create'}
+    onClick={onNewMemoryButtonClick}
+  />
+  
+  <ul>
+  {#each $selectedPlace.memories as memory}
+    <li>
+      <p>
+        {memory.body}
+      </p>
+      <p>
+        - {memory.author}
+      </p>
+    </li>
+  {/each}
+  </ul>
 </div>
 {/if}
 

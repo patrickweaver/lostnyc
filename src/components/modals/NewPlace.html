@@ -23,19 +23,17 @@
   }
   
   function addPlace(place) {
-    //console.log("before places:", JSON.stringify($places));
     places.update(n => {
       n.push(place);
       return n;
     });
-    console.log("after places:", JSON.stringify($places), typeof $places);
     drawPlace(place);
   }
   
   
 </script>
 
-<div id="new-place-form">
+<div id="new-place-form" class="form">
   <h1>
     New Place
   </h1>
@@ -60,8 +58,8 @@
     />
     <label>Date Closed:</label>
     <input bind:value="{placeInput.closeDate}" type="date" autocomplete="off" />
-    <Button label={'Cancel'} type={'cancel'} onClick={closeForm} /> <Button
-    label={'save'} type={'create'} onClick={submitForm} />
+    <Button label={'Cancel'} type={'cancel'} onClick={closeForm} />
+    <Button label={'Save'} type={'create'} onClick={submitForm} />
   </form>
 </div>
 
