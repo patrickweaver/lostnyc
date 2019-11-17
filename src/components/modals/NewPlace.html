@@ -5,7 +5,7 @@
   export let closeForm;
   export let drawPlace;
 
-  import { places, form } from "../../stores.js";
+  import { places, modalItem } from "../../stores.js";
 
   let placeInput = { state: "NY" };
 
@@ -17,12 +17,22 @@
     );
     var response = await fetch(url, options);
     const responseJson = await response.json();
-    console.log(JSON.stringify(responseJson));
-    places.update(n => n.push(responseJson));
-    drawPlace(responseJson);
-    form.update(n => null);
+    addPlace(responseJson);
+    modalItem.update(n => null); // Close form
     return responseJson;
   }
+  
+  function addPlace(place) {
+    //console.log("before places:", JSON.stringify($places));
+    places.update(n => {
+      n.push(place);
+      return n;
+    });
+    console.log("after places:", JSON.stringify($places), typeof $places);
+    drawPlace(place);
+  }
+  
+  
 </script>
 
 <div id="new-place-form">

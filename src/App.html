@@ -1,14 +1,13 @@
 <script>
   import Button from "./components/Button.html";
-  import FormContainer from "./components/FormContainer.html";
-  import Popup from "./components/Popup.html";
+  import ModalContainer from "./components/ModalContainer.html";
 
   import api from "./helpers/api.js";
   import circleProps from "./helpers/circleProps.js";
 
   var map;
 
-  import { places, selectedPlace, form } from "./stores.js";
+  import { places, selectedPlace, modalItem } from "./stores.js";
 
   function drawMap() {
     map = L.map("map")
@@ -34,9 +33,11 @@
   async function onMapClick(e) {
     // Clear popup:
     selectedPlace.update(n => null);
+    modalItem.update(n => null);
   }
 
   function onMarkerClick(e) {
+    console.log('marker click');
     // Stop map click event from firing also
     // This is a dumb way to do this but
     // there doesn't seem to be a better way?
@@ -46,16 +47,19 @@
     }, 50);
 
     // Find clicked on place in places
+    console.log('clicked:', e.target.options.placeId)
     for (var i in $places) {
+      console.log($places[i].placeId);
       if ($places[i].placeId === e.target.options.placeId) {
         selectedPlace.update(n => $places[i]);
+        modalItem.update(n => 'selectedPlace');
         break;
       }
     }
   }
 
   function onNewPlaceButtonClick() {
-    form.update(n => "newPlace");
+    modalItem.update(n => "newPlace");
   }
 
   (async function main() {
@@ -71,15 +75,19 @@
   })();
 </script>
 
-<h3 class="debug">
-  {#if $selectedPlace}
-  {$selectedPlace.name}
-  {:else}
-  No Selected Place
-  {/if}
-</h3>
-<FormContainer drawPlace="{drawPlace}" />
-<Button label={'New Place'} type={'create'} onClick={onNewPlaceButtonClick} />
-<Popup {...$selectedPlace} />
+<div class="debug">
+  <h3>
+    {$modalItem}
+  </h3>
+  <ol>
+    {#each $places as place, i}
+      <li>{i}: {place.name}</li>
+    {/each}
+  </ol>
+</div>
 
+<ModalContainer
+  drawPlace={drawPlace}
+/>
+<Button label={'New Place'} type={'create'} onClick={onNewPlaceButtonClick} />
 <style></style>

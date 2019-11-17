@@ -1,0 +1,17 @@
+<script>
+  import { selectedPlace } from '../../stores.js';
+
+  const closeYear = new Date($selectedPlace.closeDate).getFullYear();
+  
+</script>
+
+{#if $selectedPlace.placeId}
+<div>
+  <h2>{$selectedPlace.name}</h2>
+  <h3>{$selectedPlace.openYear} - {closeYear}</h3>
+</div>
+{/if}
+
+<style>
+
+</style>

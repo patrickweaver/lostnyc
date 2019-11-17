@@ -1,0 +1,54 @@
+<script>
+  import { modalItem, selectedPlace } from '../stores.js';
+  
+  // subcomponents
+  import NewPlaceForm from './modals/NewPlace.html';
+  import PlaceInfo from './modals/PlaceInfo.html';
+  
+  export let drawPlace
+  
+  const displayPlaceInfo = '';
+  
+  function closeForm() {
+    modalItem.update(n => null);
+  }
+  
+</script>
+
+{#if $modalItem}
+  <div id="modal-container">
+    
+    {#if $modalItem === 'newPlace'}
+      <NewPlaceForm
+        closeForm={closeForm}
+        drawPlace={drawPlace}
+      />
+    {/if}
+  
+    {#if $modalItem === 'selectedPlace' && $selectedPlace}
+      <PlaceInfo
+
+      />
+    {/if}
+  
+  </div>
+{/if}
+
+<style>
+  #modal-container {
+    z-index: 100;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #eee;
+    border: 2px solid black;
+    padding: 5px;
+  }
+  
+  :global(label), :global(input) {
+    display: block;
+    font-size: 16px;
+  }
+  
+  
+</style>
