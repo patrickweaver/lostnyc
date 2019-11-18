@@ -3,12 +3,18 @@
   import fetchOptions from "../../helpers/fetchOptions.js";
 
   export let closeForm;
-
-  import { places, selectedPlace, modalItem } from "../../stores.js";
+  let warning;
+  
+  import { places, selectedPlace, message, modalItem } from "../../stores.js";
   
   var memoryInput = {placeId: $selectedPlace.placeId};
 
-  async function submitForm() {
+  async function submitForm(event) {
+    event.target.blur();
+    if (!memoryInput.body) {
+      warning = "Please write your memory below."
+      return;
+    }
     const url = "/api/memories/new";
     const options = Object.assign(
       { body: JSON.stringify(memoryInput) },
@@ -18,8 +24,16 @@
     const responseJson = await response.json();
     addMemoryToPlace(responseJson);
     
-    // Back to place
-    modalItem.update(n => 'selectedPlace');
+    if (responseJson.flags) {
+      message.update(n => `
+        <h2>Thank you for submitting this memory</h2>
+        <p>Your submission has been flagged for containing inappropriate content. It will be reviewed and posted if it follows our <a href="/terms-of-use" target="_blank">terms of use.</a></p>
+      `)
+      modalItem.update(n => 'message');
+    } else {
+      // Back to place
+      modalItem.update(n => 'selectedPlace');
+    }
   }
   
   function addMemoryToPlace(memory) {
@@ -27,7 +41,6 @@
       n.memories.push(memory);
       return n;
     });
-
   }
   
   
@@ -37,6 +50,11 @@
   <h1>
     New Memory of {$selectedPlace.name}
   </h1>
+  {#if warning}
+  <p class="warning">
+    {warning}
+  </p>
+  {/if}
   <form>
     <textarea bind:value={memoryInput.body} placeholder="What do you remember about {$selectedPlace.name}"></textarea>
     <label>Author: (Optional)</label>

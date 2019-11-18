@@ -80,8 +80,10 @@
     padding: 10px;
     margin: 20px;
     width: Calc(100vw - 40px);
+    max-height: Calc(100vh - 40px);
     max-width: 600px;
     min-height: 400px;
+    overflow: scroll;
   }
   
   .flag-button {
@@ -94,8 +96,9 @@
   :global(label), :global(input), :global(textarea) {
     display: block;
     font-size: 18px;
-    line-height: 20px;
+    line-height: 22px;
     width: 100%;
+    margin: 3px 0;
   }
   
   :global(textarea) {
@@ -115,6 +118,10 @@
     background-color: inherit;
     text-decoration: underline;
     cursor: pointer;
+  }
+  
+  :global(.warning) {
+    color: red;
   }
   
   

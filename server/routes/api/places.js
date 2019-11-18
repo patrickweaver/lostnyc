@@ -6,6 +6,8 @@ const Place = sequelize.import('../../models/place.js');
 const Memory = sequelize.import('../../models/memory.js');
 const Flag = sequelize.import('../../models/flag.js');
 
+const checkLanguage = require('../../helpers/checkLanguage.js');
+
 const uuidv4 = require('uuid/v4');
 
 // All Places:
@@ -39,6 +41,7 @@ router.get("/find/:placeId", async function(req, res) {
 
 // New Place:
 router.post("/new", async function(req, res) {
+  
   const geolocationOptions = {
     uri: 'https://maps.googleapis.com/maps/api/geocode/json',
     qs: {
@@ -66,8 +69,18 @@ router.post("/new", async function(req, res) {
   
   const newPlace = await Place.create(place)
   
-  console.log("New Place:", newPlace.get())
-  res.json(newPlace.get());
+  var savedPlace = newPlace.get();
+  
+  if (checkLanguage([savedPlace.name, savedPlace.address, savedPlace.city, savedPlace.state, savedPlace.zip, savedPlace.yearOpened])) {
+    const newFlag = await Flag.create({
+      flagId: uuidv4(),
+      body: `Inappropriate Content: ${savedPlace.name} - ${savedPlace.address} - ${savedPlace.city} - ${savedPlace.state} - ${savedPlace.zip} - ${savedPlace.yearOpened}`,
+      placeId: savedPlace.placeId
+    })
+    savedPlace.flags = [newFlag.get()];
+  }
+  
+  res.json(savedPlace);
 });
 
 // Delete Place:

@@ -24,5 +24,6 @@ body {
   bottom: 10px;
   left: 10px;
   max-width: 70vw;
+  display: none;
 }
   

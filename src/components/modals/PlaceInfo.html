@@ -5,20 +5,26 @@
   import Button from "../Button.html";
 
   export let closeModal;
+  let closeYear;
 
   beforeUpdate(async () => {
     console.log("beforeUpdate");
+    
+    // Get place details:
     if (!$selectedPlace.name) {
       const res = await fetch(`/api/places/find/${$selectedPlace.placeId}`);
       const placeWithMemories = await res.json();
       console.log(placeWithMemories[0]);
       selectedPlace.update(n => placeWithMemories[0]);
     }
-  });
-
-  const closeYear = $selectedPlace.closeDate
+    
+    // Calculate closeYear:
+    closeYear = $selectedPlace.closeDate
     ? new Date($selectedPlace.closeDate).getFullYear()
     : null;
+  });
+
+  
 
   function onNewMemoryButtonClick() {
     modalItem.update(n => "newMemory");
@@ -41,8 +47,18 @@
 <div>
   <h2>{$selectedPlace.name}</h2>
   <h3>
-    {#if $selectedPlace.openYear} {$selectedPlace.openYear} - {:else} Unknown -
-    {/if} {#if $selectedPlace.closeYear} {closeYear} {:else} Unknown {/if}
+    {#if $selectedPlace.openYear || closeYear }
+      {#if $selectedPlace.openYear}
+        {$selectedPlace.openYear} -
+      {:else}
+        Unknown -
+      {/if}
+      {#if closeYear}
+        {closeYear}
+      {:else}
+        Unknown
+      {/if}
+    {/if}
   </h3>
   <p>
     {$selectedPlace.address}<br />
@@ -56,7 +72,7 @@
     <li>
       <p>{memory.body} <span class="text-button" on:click="{() => seeFullMemory(index)}">Read More</span></p>
       <p>
-        - {memory.author}
+        - {#if memory.author}{memory.author}{:else}Anonymous{/if}
       </p>
     </li>
     {/each}

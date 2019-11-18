@@ -1,7 +1,6 @@
 <script>
-  
+  import { message } from "../../stores.js";
   export let returnToMap;
-  let messageBody = 'We will take a look at the item you flagged. If it is inappropriate it will be removed.';
 
 </script>
 
@@ -10,8 +9,8 @@
 </button>
 
 <div>
-  <h2>Thank you for flagging this.</h2>
-  <p>{messageBody}</p>
+  
+  {@html $message}
   
   <button class="text-button" on:click={returnToMap}>
   Done

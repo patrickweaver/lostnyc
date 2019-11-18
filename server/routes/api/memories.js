@@ -3,6 +3,8 @@ const sequelize = require('../../db/init.js');
 const Memory = sequelize.import('../../models/memory.js');
 const Flag = sequelize.import('../../models/flag.js');
 
+const checkLanguage = require('../../helpers/checkLanguage.js');
+
 const uuidv4 = require('uuid/v4');
 
 // All Memories:
@@ -33,6 +35,19 @@ router.all("/new", async function(req, res) {
     placeId: req.body.placeId
   }
   const newMemory = await Memory.create(memory);
+  
+  var savedMemory = newMemory.get();
+  
+  if (checkLanguage([savedMemory.body, savedMemory.author])) {
+    const newFlag = await Flag.create({
+      flagId: uuidv4(),
+      body: `Inappropriate Content: ${savedMemory.body} by ${savedMemory.author}`,
+      placeId: savedMemory.placeId,
+      memoryId: savedMemory.memoryId
+    })
+    savedMemory.flags = [newFlag.get()];
+  }
+  
   res.json(newMemory.get());
 });
 

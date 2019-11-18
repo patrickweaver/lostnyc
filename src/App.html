@@ -7,7 +7,7 @@
 
   var map;
 
-  import { places, selectedPlace, modalItem } from "./stores.js";
+  import { places, selectedPlace, message, modalItem } from "./stores.js";
 
   function drawMap() {
     map = L.map("map")
@@ -31,6 +31,8 @@
   }
   
   function returnToMap() {
+    // Clear message:
+    message.update(n => null);
     // Clear modal:
     selectedPlace.update(n => null);
     modalItem.update(n => null);
@@ -53,7 +55,8 @@
     selectedPlace.update(n => placeStub);
   }
 
-  function onNewPlaceButtonClick() {
+  function onNewPlaceButtonClick(event) {
+    event.target.blur();
     modalItem.update(n => "newPlace");
     selectedPlace.update(n => null)
   }

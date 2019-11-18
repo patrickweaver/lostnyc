@@ -18,5 +18,5 @@
 
 <div id="memory">
   <p>{$selectedMemory.body}</p>
-  <p>{$selectedMemory.author}</p>
+   - {#if $selectedMemory.author}{$selectedMemory.author}{:else}Anonymous{/if}
 </div>

@@ -5,11 +5,20 @@
   export let closeForm;
   export let drawPlace;
 
-  import { places, selectedPlace, modalItem } from "../../stores.js";
+  import { places, selectedPlace, message, modalItem } from "../../stores.js";
 
   let placeInput = { state: "NY" };
+  let warning;
 
-  async function submitForm() {
+  async function submitForm(event) {
+    event.target.blur();
+    if (!placeInput.name || !placeInput.address) {
+      warning = "Please add the name and address of the place."
+      return;
+    }
+    if (!placeInput.city) {
+      placeInput.city = "DEFAULT_CITY";
+    }
     const url = "/api/places/new";
     const options = Object.assign(
       { body: JSON.stringify(placeInput) },
@@ -18,8 +27,17 @@
     var response = await fetch(url, options);
     const responseJson = await response.json();
     addPlace(responseJson);
-    selectedPlace.update(n => responseJson);
-    modalItem.update(n => 'selectedPlace');
+    if (responseJson.flags) {
+      message.update(n => `
+        <h2>Thank you for submitting this place</h2>
+        <p>Your submission has been flagged for containing inappropriate content. It will be reviewed and posted if it follows our <a href="/terms-of-use" target="_blank">terms of use.</a></p>
+      `)
+      modalItem.update(n => 'message');
+    } else {
+      // Go to new place
+      selectedPlace.update(n => responseJson);
+      modalItem.update(n => 'selectedPlace');
+    }
   }
   
   function addPlace(place) {
@@ -37,8 +55,13 @@
   <h1>
     New Place
   </h1>
-  <form>
-    <label>Name:</label>
+  {#if warning}
+  <p class="warning">
+    {warning}
+  </p>
+  {/if}
+  <form autocomplete="off">
+    <label>Place Name:</label>
     <input bind:value="{placeInput.name}" type="text" autocomplete="off" />
     <label>Address:</label>
     <input bind:value="{placeInput.address}" type="text" autocomplete="off" />

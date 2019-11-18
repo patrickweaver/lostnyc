@@ -3,7 +3,7 @@
   import fetchOptions from "../../helpers/fetchOptions.js";
 
   export let closeForm;
-
+  let warning;
   
   import { modalItem, selectedMemory, selectedPlace } from "../../stores.js";
   
@@ -22,7 +22,12 @@
     flagType = 'memory';
   }
 
-  async function submitForm() {
+  async function submitForm(event) {
+    event.target.blur();
+    if (!flagInput.body) {
+      warning = "Please describe any issues with this {flagType} below."
+      return;
+    }
     const url = "/api/flags/new";
     const options = Object.assign(
       { body: JSON.stringify(flagInput) },
@@ -31,6 +36,10 @@
     var response = await fetch(url, options);
     const responseJson = await response.json();
     // Back to place
+    message.update(n => `
+      <h2>Thank you for flagging this.</h2>
+      <p>We will take a look at the item you flagged. If it is inappropriate it will be removed.</p>
+    `);
     modalItem.update(n => 'message');
   }
   
@@ -51,6 +60,12 @@
   <p>
     If there are issues with the accuracy of the details of a place please let us know. If you would like us to reach out to you about this issue please incude an email address. Thanks!
   </p>
+  
+  {#if warning}
+  <p class="warning">
+    {warning}
+  </p>
+  {/if}
   
   <form>
     <textarea bind:value={flagInput.body} placeholder="This {flagType} should be flagged because . . ."></textarea>
