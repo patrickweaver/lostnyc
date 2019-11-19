@@ -8,10 +8,9 @@ const Flag = sequelize.import('../../models/flag.js');
 
 const checkLanguage = require('../../helpers/checkLanguage.js');
 
-const uuidv4 = require('uuid/v4');
-
 // All Places:
 router.get("/", async function(req, res) {
+  
   res.json(await Place.findAll({
     attributes: { include: [
       [sequelize.fn('COUNT', sequelize.col('flags.flagId')), 'flagsCount'],
@@ -23,6 +22,16 @@ router.get("/", async function(req, res) {
     ],
     group: ['place.placeId']
   }));
+  
+  
+  /*
+  res.json(await sequelize.query(`
+    SELECT placeId, name,
+    (SELECT flagId FROM Flags
+    WHERE Flags.placeId = p.placeId)
+    FROM Places p;
+  `))
+  */
 });
 
 // Single Place with Memories:
@@ -54,7 +63,6 @@ router.post("/new", async function(req, res) {
   const location = geolocationResponse.results[0].geometry.location
   
   const place = {
-    placeId: uuidv4(),
     lat: parseFloat(location.lat),
     long: parseFloat(location.lng),
     name: req.body.name,
@@ -73,7 +81,6 @@ router.post("/new", async function(req, res) {
   
   if (checkLanguage([savedPlace.name, savedPlace.address, savedPlace.city, savedPlace.state, savedPlace.zip, savedPlace.yearOpened])) {
     const newFlag = await Flag.create({
-      flagId: uuidv4(),
       body: `Inappropriate Content: ${savedPlace.name} - ${savedPlace.address} - ${savedPlace.city} - ${savedPlace.state} - ${savedPlace.zip} - ${savedPlace.yearOpened}`,
       placeId: savedPlace.placeId
     })

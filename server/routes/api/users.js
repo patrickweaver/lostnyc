@@ -3,9 +3,6 @@ const sequelize = require('../../db/init.js');
 const User = sequelize.import('../../models/user.js');
 const hashPassword = require('../../helpers/hashPassword.js');
 
-const uuidv4 = require('uuid/v4');
-
-
 // All Flags
 router.get("/", async function(req, res) {
   res.json(await User.findAll());
@@ -20,7 +17,6 @@ router.post("/new", async function(req, res) {
     }
   
   const user = {
-    userId: uuidv4(),
     username: req.body.username,
     permissions: req.body.permissions,
     password: pwHash

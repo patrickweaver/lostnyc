@@ -2,11 +2,12 @@ const Sequelize = require('sequelize');
 const sequelize = require('../db/init.js');
 const Memory = sequelize.import('./memory.js');
 const Flag = sequelize.import('./flag.js');
+const uuidv4 = require('uuid/v4');
 
 module.exports = (sequelize, DataTypes) => {
   class Place extends Sequelize.Model {}
   Place.init({
-    placeId: {type: DataTypes.STRING, primaryKey: true},
+    placeId: {type: DataTypes.STRING, primaryKey: true, defaultValue: uuidv4(), unique: true},
     lat: DataTypes.FLOAT,
     long: DataTypes.FLOAT,
     name: DataTypes.STRING,

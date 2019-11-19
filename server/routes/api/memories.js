@@ -5,8 +5,6 @@ const Flag = sequelize.import('../../models/flag.js');
 
 const checkLanguage = require('../../helpers/checkLanguage.js');
 
-const uuidv4 = require('uuid/v4');
-
 // All Memories:
 router.get("/", async function(req, res) {
   res.json(await Memory.findAll({
@@ -32,7 +30,6 @@ router.all("/new", async function(req, res) {
   const author = req.body.author ? req.body.author : 'Anonymous';
   
   const memory = {
-    memoryId: uuidv4(),
     body: req.body.body,
     author: author,
     placeId: req.body.placeId
@@ -43,7 +40,6 @@ router.all("/new", async function(req, res) {
   
   if (checkLanguage([savedMemory.body, savedMemory.author])) {
     const newFlag = await Flag.create({
-      flagId: uuidv4(),
       body: `Inappropriate Content: ${savedMemory.body} by ${savedMemory.author}`,
       placeId: savedMemory.placeId,
       memoryId: savedMemory.memoryId

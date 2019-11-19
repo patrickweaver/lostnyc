@@ -1,6 +1,7 @@
 <script>
   import { modalItem, selectedPlace } from '../stores.js';
   import fetchOptions from "../helpers/fetchOptions.js";
+  import months from "../helpers/months.js";
   
   // subcomponents
   import Memory from './modals/Memory.html';
@@ -27,6 +28,13 @@
     modalItem.update(n => type)
   }
   
+  function memoryTimestamp(memory) {
+    const date = new Date(memory.createdAt)
+    const currentYear = (new Date()).getFullYear();
+    const year = currentYear === date.getFullYear() ? '' : `, ${date.getFullYear()}`;
+    return `on ${months[date.getMonth()]} ${date.getDate()}${year}`;
+  }
+  
 </script>
 
 {#if $modalItem}
@@ -42,7 +50,8 @@
         closeForm={closeForm}
       />
     {:else if $modalItem === 'memory'}
-      <Memory      
+      <Memory
+        memoryTimestamp={memoryTimestamp}
       />
     {:else if $modalItem === 'placeFlag' || $modalItem === 'memoryFlag'}
       <NewFlag
@@ -54,6 +63,7 @@
     {:else if $modalItem === 'selectedPlace' && $selectedPlace}
       <PlaceInfo
         closeModal={returnToMap}
+        memoryTimestamp={memoryTimestamp}
       />
     {/if}
   

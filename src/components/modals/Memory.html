@@ -1,6 +1,8 @@
 <script>
   import { modalItem, selectedMemory } from "../../stores.js";
   
+  export let memoryTimestamp;
+  
   function returnToPlace() {
     modalItem.upate(n => 'selectedPlace');
   }
@@ -18,5 +20,5 @@
 
 <div id="memory">
   <p>{$selectedMemory.body}</p>
-   - {#if $selectedMemory.author}{$selectedMemory.author}{:else}Anonymous{/if}
+   - {#if $selectedMemory.author}{$selectedMemory.author}{:else}Anonymous{/if}{memoryTimestamp($selectedMemory)}
 </div>
