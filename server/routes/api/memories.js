@@ -28,10 +28,13 @@ router.get("/:placeId", async function(req, res) {
 
 // New Memory:
 router.all("/new", async function(req, res) {
+  
+  const author = req.body.author ? req.body.author : 'Anonymous';
+  
   const memory = {
     memoryId: uuidv4(),
     body: req.body.body,
-    author: req.body.author,
+    author: author,
     placeId: req.body.placeId
   }
   const newMemory = await Memory.create(memory);

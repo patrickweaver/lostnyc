@@ -1,0 +1,10 @@
+// User must be logged in for this to render
+// require('connect-ensure-login').ensureLoggedIn()
+// redirects if not logged in
+
+p
+  | User Id: #{user.userId}
+  br
+  | Username: #{user.username}
+  br
+a(href="/logout") Log out
