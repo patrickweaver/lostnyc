@@ -7,7 +7,7 @@ const uuidv4 = require('uuid/v4');
 module.exports = (sequelize, DataTypes) => {
   class Place extends Sequelize.Model {}
   Place.init({
-    placeId: {type: DataTypes.STRING, primaryKey: true, defaultValue: uuidv4(), unique: true},
+    placeId: {type: DataTypes.UUID, primaryKey: true, defaultValue: DataTypes.UUIDV4, unique: true},
     lat: DataTypes.FLOAT,
     long: DataTypes.FLOAT,
     name: DataTypes.STRING,
@@ -17,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     zip: DataTypes.STRING,
     openYear: DataTypes.INTEGER,
     closeDate: DataTypes.DATE,
-    cityCouncilDistrict: DataTypes.INTEGER
+    cityCouncilDistrict: DataTypes.INTEGER,
+    category: DataTypes.STRING
   }, { sequelize });
   
   Place.hasMany(Flag, {foreignKey: 'placeId', targetKey: 'placeId', as: 'flags'});

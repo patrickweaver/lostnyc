@@ -2,6 +2,7 @@ const router = require('express').Router();
 const sequelize = require('../db/init.js');
 const User = sequelize.import('../models/user.js');
 const uuidv4 = require('uuid/v4');
+const connect = require('connect-ensure-login');
 
 module.exports = function (passport) {
 
@@ -33,7 +34,7 @@ module.exports = function (passport) {
   );
 
   router.get('/profile',
-    require('connect-ensure-login').ensureLoggedIn(),
+    connect.ensureLoggedIn(),
     function(req, res){
       res.render('profile', { user: req.user });
     }

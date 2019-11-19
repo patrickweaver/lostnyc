@@ -59,12 +59,23 @@ router.post("/new", async function(req, res) {
     }
   }
   const geolocationResponse = JSON.parse(await rp(geolocationOptions));
-  console.log(geolocationResponse);
-  const location = geolocationResponse.results[0].geometry.location
+  const location = geolocationResponse.results[0].geometry.location;
+  
+  var flagForDefaultLocation = false;
+  const locationLat = parseFloat(location.lat);
+  const locationLong = parseFloat(location.lng);
+  if (
+    locationLat > process.env.DEFAULT_LAT_MIN
+    && locationLat < process.env.DEFAULT_LAT_MAX
+    && locationLong > process.env.DEFAULT_LONG_MIN
+    && locationLong < process.env.DEFAULT_LONG_MAX
+  ) {
+    flagForDefaultLocation = true;
+  }
   
   const place = {
-    lat: parseFloat(location.lat),
-    long: parseFloat(location.lng),
+    lat: parseFloat(locationLat),
+    long: parseFloat(locationLong),
     name: req.body.name,
     address: req.body.address,
     city: req.body.city,
@@ -72,19 +83,42 @@ router.post("/new", async function(req, res) {
     zip: req.body.zip,
     openYear: req.body.openYear,
     closeDate: new Date(req.body.closeDate),
-    cityCouncilDistrict: req.body.cityCouncilDistrict
+    cityCouncilDistrict: req.body.cityCouncilDistrict,
+    category: req.body.category
   }
   
-  const newPlace = await Place.create(place)
-  
-  var savedPlace = newPlace.get();
-  
-  if (checkLanguage([savedPlace.name, savedPlace.address, savedPlace.city, savedPlace.state, savedPlace.zip, savedPlace.yearOpened])) {
-    const newFlag = await Flag.create({
-      body: `Inappropriate Content: ${savedPlace.name} - ${savedPlace.address} - ${savedPlace.city} - ${savedPlace.state} - ${savedPlace.zip} - ${savedPlace.yearOpened}`,
-      placeId: savedPlace.placeId
-    })
-    savedPlace.flags = [newFlag.get()];
+  var savedPlace;
+  try {
+    const newPlace = await Place.create(place)
+    savedPlace = newPlace.get();
+
+    
+    if (
+      checkLanguage([savedPlace.name, savedPlace.address, savedPlace.city, savedPlace.state, savedPlace.zip, savedPlace.yearOpened])
+      || flagForDefaultLocation
+    ) {
+      
+      var flagReason;
+      if (flagForDefaultLocation) {
+        flagReason = 'Default Location'
+      } else {
+        flagReason = 'Inappropriate Content'
+      }
+      
+      const newFlag = await Flag.create({
+        body: `** ${flagReason}: ${savedPlace.name} - ${savedPlace.address} - ${savedPlace.city} - ${savedPlace.state} - ${savedPlace.zip} - ${savedPlace.yearOpened}`,
+        placeId: savedPlace.placeId
+      })
+      savedPlace.flags = [newFlag.get()];
+      
+      savedPlace.flags[0].reason = flagReason;
+    }
+  } catch (err) {
+    
+    console.log("ERROR:");
+    console.log(err);
+    
+    savedPlace = {error: "Place not saved"}
   }
   
   res.json(savedPlace);

@@ -1,0 +1,31 @@
+extends ../layout.pug
+
+block content
+
+  h2 Place Flags
+
+  ul(class="admin-list")
+    each flag in flags
+      li(class="admin-flag")
+        ul
+          li
+            h4 Flag:
+          li Flag Id: #{flag.flagId}
+          li Memory Id: #{flag.memoryId}
+          li Flag Place Id: #{flag.placeId}
+          li Flag Timestamp: #{flag.flagCreatedAt}
+          li Flag Body:
+            p= flag.flagBody
+          li 
+            h4 Place:
+          li Lat #{flag.lat}
+          li Long: #{flag.long}
+          li Name: #{flag.name}
+          li Address: #{flag.address}
+          li City: #{flag.city}
+          li State: #{flag.state}
+          li Zip: #{flag.zip}
+          li Open Year: #{flag.openYear}
+          li Close Date: #{flag.closeDate}
+          li Council District: #{flag.cityCouncilDistrict}
+          li Place Timestamp: #{flag.placeCreatedAt}

@@ -1,0 +1,25 @@
+extends ../layout.pug
+
+block content
+
+  h2 Memory Flags
+
+  ul(class="admin-list")
+    each flag in flags
+      li(class="admin-flag")
+        ul
+          li
+            h4 Flag:
+          li Flag Id: #{flag.flagId}
+          li Memory Id: #{flag.memoryId}
+          li Flag Place Id: #{flag.flagPlaceId}
+          li Flag Timestamp: #{flag.flagCreatedAt}
+          li Flag Body:
+            p= flag.flagBody
+          li 
+            h4 Memory:
+          li Memory Place Id: #{flag.memoryPlaceId}
+          li Memory Timestamp: #{flag.memoryCreatedAt}
+          li Memory Author: #{flag.memoryAuthor}
+          li Memory Body:
+            p= flag.memoryBody

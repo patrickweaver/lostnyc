@@ -6,6 +6,7 @@
   export let drawPlace;
 
   import { places, selectedPlace, message, modalItem } from "../../stores.js";
+  import messages from "../../helpers/messages.js";
 
   let placeInput = { state: "NY" };
   let warning;
@@ -26,12 +27,29 @@
     );
     var response = await fetch(url, options);
     const responseJson = await response.json();
-    addPlace(responseJson);
-    if (responseJson.flags) {
+    
+    console.log(responseJson);
+    
+    if (responseJson.error) {
+      modalItem.update(n => 'message');
       message.update(n => `
-        <h2>Thank you for submitting this place</h2>
-        <p>Your submission has been flagged for containing inappropriate content. It will be reviewed and posted if it follows our <a href="/terms-of-use" target="_blank">terms of use.</a></p>
+        <h2>Error saving place</h2>
+        <p>This address was not able to be saved. Please double check it and try again.</p>
       `)
+      return
+    }
+    
+    addPlace(responseJson);
+    if (responseJson.flags && responseJson.flags[0]) {
+      const flag = responseJson.flags[0]
+      if (flag.reason && flag.reason === "Inappropriate Content") {
+        message.update(n => messages.inappropriateContent)
+      } else if (flag.reason && flag.reason === "Default Location") {
+        message.update(n => messages.defaultAddress)
+      } else {
+        message.update(n => messages.other)
+      }
+      
       modalItem.update(n => 'message');
     } else {
       // Go to new place
@@ -81,6 +99,8 @@
     />
     <label>Date Closed:</label>
     <input bind:value="{placeInput.closeDate}" type="date" autocomplete="off" />
+    <label>Type of Place:</label>
+    <input bind:value="{placeInput.category}" type="text" autocomplete="off" />
     <Button label={'Save'} type={'create'} onClick={submitForm} />
     <Button label={'Cancel'} type={'cancel'} onClick={closeForm} />
   </form>

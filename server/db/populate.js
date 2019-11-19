@@ -18,7 +18,6 @@ module.exports = function() {
     }
     
     return User.create({
-      userId: uuidv4(),
       username: process.env.ADMIN_USERNAME,
       password: pwHash,
       permissions: 'superadmin'

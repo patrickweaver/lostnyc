@@ -26,28 +26,31 @@ router.get("/:placeId", async function(req, res) {
 
 // New Memory:
 router.all("/new", async function(req, res) {
-  
-  const author = req.body.author ? req.body.author : 'Anonymous';
-  
-  const memory = {
-    body: req.body.body,
-    author: author,
-    placeId: req.body.placeId
+  if (!req.body.body) {
+    res.json({error: 'No Memory Body'})
+  } else {
+    const author = req.body.author ? req.body.author : 'Anonymous';
+
+    const memory = {
+      body: req.body.body,
+      author: author,
+      placeId: req.body.placeId
+    }
+    const newMemory = await Memory.create(memory);
+
+    var savedMemory = newMemory.get();
+
+    if (checkLanguage([savedMemory.body, savedMemory.author])) {
+      const newFlag = await Flag.create({
+        body: `** Inappropriate Content: ${savedMemory.body} by ${savedMemory.author}`,
+        placeId: savedMemory.placeId,
+        memoryId: savedMemory.memoryId
+      })
+      savedMemory.flags = [newFlag.get()];
+    }
+
+    res.json(newMemory.get());
   }
-  const newMemory = await Memory.create(memory);
-  
-  var savedMemory = newMemory.get();
-  
-  if (checkLanguage([savedMemory.body, savedMemory.author])) {
-    const newFlag = await Flag.create({
-      body: `Inappropriate Content: ${savedMemory.body} by ${savedMemory.author}`,
-      placeId: savedMemory.placeId,
-      memoryId: savedMemory.memoryId
-    })
-    savedMemory.flags = [newFlag.get()];
-  }
-  
-  res.json(newMemory.get());
 });
 
 // Delete Memory:

@@ -37,8 +37,9 @@
   }
   
   function addMemoryToPlace(memory) {
+    const memoryWithShortBody = shortBody(memory);
     selectedPlace.update(n => {
-      n.memories.push(memory);
+      n.memories.push(memoryWithShortBody);
       return n;
     });
   }

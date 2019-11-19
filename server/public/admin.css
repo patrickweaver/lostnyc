@@ -1,0 +1,16 @@
+h1, h2, h3, h4 {
+  margin: 5px 0;
+}
+
+.admin-list {
+  list-style-type: none;
+}
+
+
+
+.admin-flag {
+  padding: 10px 0;
+  background-color: #F3B3E5;
+  border: 2px solid: #9563B2;
+  margin: 20px 0;
+}

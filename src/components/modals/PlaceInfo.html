@@ -3,6 +3,8 @@
   import { modalItem, selectedPlace, selectedMemory } from "../../stores.js";
 
   import Button from "../Button.html";
+  
+  import shortBody from "../../helpers/shortBody.js";
 
   export let closeModal;
   export let memoryTimestamp;
@@ -14,9 +16,9 @@
     // Get place details:
     if (!$selectedPlace.name) {
       const res = await fetch(`/api/places/find/${$selectedPlace.placeId}`);
-      const placeWithMemories = await res.json();
-      console.log(placeWithMemories[0]);
-      selectedPlace.update(n => placeWithMemories[0]);
+      const placeWithMemories = (await res.json())[0];
+      placeWithMemories.memories.map(i => shortBody(i));
+      selectedPlace.update(n => placeWithMemories);
     }
     
     // Calculate closeYear:
@@ -71,7 +73,11 @@
   <ul>
     {#each $selectedPlace.memories as memory, index}
     <li>
-      <p>{memory.body} <span class="text-button" on:click="{() => seeFullMemory(index)}">Read More</span></p>
+      <p>{memory.shortBody}
+        {#if memory.body.length > 240}
+          <span class="text-button" on:click="{() => seeFullMemory(index)}">Read More</span>
+        {/if}
+      </p>
       <p>
         - {#if memory.author}{memory.author}{:else}Anonymous{/if} {memoryTimestamp(memory)}
       </p>

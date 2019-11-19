@@ -4,6 +4,6 @@ module.exports = {
   TILE_LAYER: 'https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png',
   TILE_ATTRIBUTION: "&copy; <a id='home-link' target='_top' href='../'>Map tiles</a> by <a target='_top' href='http://stamen.com'>Stamen Design</a>, under <a target='_top' href='http://creativecommons.org/licenses/by/3.0'>CC BY 3.0</a>. Data by <a target='_top' href='http://openstreetmap.org'>OpenStreetMap</a>, under <a target='_top' href='http://creativecommons.org/licenses/by-sa/3.0'>CC BY SA</a>.",
   DEFAULT_CITY: "New York",
-  SHOW_FLAGGED_PLACES: false
-  
+  SHOW_FLAGGED_PLACES: false,
+  SHOW_NO_MEMORY_PLACES: true
 }

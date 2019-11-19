@@ -132,6 +132,11 @@ const users = require('./routes/api/users.js');
 app.use('/api/users', users);
 const auth = require('./routes/authentication.js')(passport);
 app.use('/auth', auth);
+const adminFlags = require('./routes/admin/flags.js');
+app.use('/admin/flags', adminFlags);
+
+
+// Redirects:
 app.all('/login', function(req, res) {
   res.redirect('/auth/login');
 });

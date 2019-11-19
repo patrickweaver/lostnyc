@@ -6,7 +6,7 @@ const uuidv4 = require('uuid/v4');
 module.exports = (sequelize, DataTypes) => {
   class Memory extends Sequelize.Model {}
   Memory.init({
-    memoryId: {type: DataTypes.STRING, primaryKey: true, defaultValue: uuidv4(), unique: true},
+    memoryId: {type: DataTypes.UUID, primaryKey: true, defaultValue: DataTypes.UUIDV4, unique: true},
     body: Sequelize.TEXT,
     author: Sequelize.STRING
   }, { sequelize });
