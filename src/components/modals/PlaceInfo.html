@@ -50,6 +50,9 @@
 <div>
   <h2>{$selectedPlace.name}</h2>
   <h3>
+    {$selectedPlace.category}
+  </h3>
+  <h4>
     {#if $selectedPlace.openYear || closeYear }
       {#if $selectedPlace.openYear}
         {$selectedPlace.openYear} -
@@ -62,7 +65,7 @@
         Unknown
       {/if}
     {/if}
-  </h3>
+  </h4>
   <p>
     {$selectedPlace.address}<br />
     {$selectedPlace.city}

@@ -7,19 +7,31 @@
 
   import { places, selectedPlace, message, modalItem } from "../../stores.js";
   import messages from "../../helpers/messages.js";
+  import categories from "../../helpers/placeCategories.js";
 
   let placeInput = { state: "NY" };
   let warning;
+  let otherCategory;
 
   async function submitForm(event) {
     event.target.blur();
+    
+    // Check for required fields
     if (!placeInput.name || !placeInput.address) {
       warning = "Please add the name and address of the place."
       return;
     }
+    
+    // Fill City if left blank
     if (!placeInput.city) {
       placeInput.city = "DEFAULT_CITY";
     }
+    
+    // Check for other category
+    if (placeInput.category === 'Other' && otherCategory) {
+      placeInput.category = otherCategory;
+    }
+    
     const url = "/api/places/new";
     const options = Object.assign(
       { body: JSON.stringify(placeInput) },
@@ -100,7 +112,17 @@
     <label>Date Closed:</label>
     <input bind:value="{placeInput.closeDate}" type="date" autocomplete="off" />
     <label>Type of Place:</label>
-    <input bind:value="{placeInput.category}" type="text" autocomplete="off" />
+    <select bind:value={placeInput.category}>
+      {#each categories as category}
+        <option value={category}>
+          {category}
+        </option>
+      {/each}
+    </select>
+    {#if placeInput.category === 'Other'}
+      <label>Type of Place (Other):</label>
+      <input bind:value="{otherCategory}" type="text" autocomplete="off" />
+    {/if}
     <Button label={'Save'} type={'create'} onClick={submitForm} />
     <Button label={'Cancel'} type={'cancel'} onClick={closeForm} />
   </form>

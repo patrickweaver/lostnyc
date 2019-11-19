@@ -1,9 +1,24 @@
-module.exports = function(placeId) {
+const colors = require('./colors.js');
+const placeCategories = require('./placeCategories.js');
+
+module.exports = function(place) {
+  
+  const other = colors[colors.length - 1];
+  const placeIndex = placeCategories.indexOf(place.category);
+  var color;
+  if (placeIndex === -1) {
+    color = colors[colors.length - 1];
+  } else {
+    color = colors[placeIndex];
+  }
+  
+  
+  
   return {
-    color: '#57ccf7',
-    fillColor: '#57ccf7',
+    color: color[0],
+    fillColor: color[1],
     fillOpacity: 0.5,
     radius: 100,
-    placeId: placeId
+    placeId: place.placeId
   }
 }

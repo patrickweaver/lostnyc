@@ -101,7 +101,7 @@ router.post("/new", async function(req, res) {
 
     
     if (
-      checkLanguage([savedPlace.name, savedPlace.address, savedPlace.city, savedPlace.state, savedPlace.zip, savedPlace.yearOpened])
+      checkLanguage([savedPlace.name, savedPlace.address, savedPlace.city, savedPlace.state, savedPlace.zip, savedPlace.yearOpened, savedPlace.category])
       || flagForDefaultLocation
     ) {
       

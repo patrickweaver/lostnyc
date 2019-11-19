@@ -25,7 +25,7 @@
     if (!place.lat || !place.long) {
       return;
     }
-    var circle = L.circle([place.lat, place.long], circleProps(place.placeId))
+    var circle = L.circle([place.lat, place.long], circleProps(place))
       .addTo(map)
       .on("click", onMarkerClick);
     if (recenter) {
