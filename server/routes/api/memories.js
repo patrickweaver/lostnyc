@@ -63,9 +63,8 @@ router.post("/delete", async function(req, res) {
     });
     if (deletedStatus === 1) {
       res.status(200).json({ deleted: true });
-      return;
     } else {
-      res.status(400).json({deleted: false, error: "No such memory"})
+      res.status(400).json({deleted: false, error: "No such memory"});
     }
   } else {
     res.status(400).json({deleted: false, error: "Invalid or missing API Key"});

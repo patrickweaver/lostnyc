@@ -10,7 +10,7 @@ const checkLanguage = require('../../helpers/checkLanguage.js');
 
 // All Places:
 router.get("/", async function(req, res) {
-  
+  /*
   res.json(await Place.findAll({
     attributes: { include: [
       [sequelize.fn('COUNT', sequelize.col('flags.flagId')), 'flagsCount'],
@@ -22,16 +22,23 @@ router.get("/", async function(req, res) {
     ],
     group: ['place.placeId']
   }));
-  
-  
-  /*
-  res.json(await sequelize.query(`
-    SELECT placeId, name,
-    (SELECT flagId FROM Flags
-    WHERE Flags.placeId = p.placeId)
-    FROM Places p;
-  `))
   */
+  
+  
+  res.json((await sequelize.query(`
+    SELECT Places.*,
+    (SELECT COUNT(flagId) FROM Flags
+    WHERE (Flags.placeId = Places.placeId
+    AND Flags.dismissed = false))
+    AS flagsCount,
+    (SELECT COUNT(memoryId) FROM Memories
+    WHERE Memories.placeId = Places.placeId)
+    AS memoriesCount
+    FROM Places
+    LEFT JOIN Flags on Places.placeId = Flags.placeId
+    LEFT JOIN Memories on Places.placeId = Memories.placeId;
+  `))[0])
+  
 });
 
 // Single Place with Memories:
@@ -135,9 +142,8 @@ router.post("/delete", async function(req, res) {
     
     if (deletedStatus === 1) {
       res.status(200).json({ deleted: true });
-      return;
     } else {
-      res.status(400).json({deleted: false, error: "No such place"})
+      res.status(400).json({deleted: false, error: "No such place"});
     }
   } else {
     res.status(400).json({deleted: false, error: "Invalid or missing API Key"});

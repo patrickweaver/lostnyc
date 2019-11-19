@@ -20,7 +20,7 @@
     }).addTo(map);
   }
 
-  function drawPlace(place) {
+  function drawPlace(place, recenter) {
     //console.log(place);
     if (!place.lat || !place.long) {
       return;
@@ -28,6 +28,9 @@
     var circle = L.circle([place.lat, place.long], circleProps(place.placeId))
       .addTo(map)
       .on("click", onMarkerClick);
+    if (recenter) {
+      map.panTo(new L.LatLng(place.lat, place.long));
+    }
   }
   
   function returnToMap() {
@@ -69,7 +72,7 @@
     places.update(n => placesApiResponse);
     // Draw all the places
     for (var i in $places) {
-      drawPlace($places[i]);
+      drawPlace($places[i], false);
     }
   })();
 </script>
