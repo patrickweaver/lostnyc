@@ -7,6 +7,10 @@ module.exports = {
     <h2>Thank you for submitting this place</h2>
     <p>Your submission has been flagged because the address could not be found. It will be reviewed and posted if we can identify a correct address.</p>
   `,
+  newFlag: `
+    <h2>Thank you for flagging this.</h2>
+    <p>We will take a look at the item you flagged. If it is inappropriate it will be removed.</p>
+  `,
   other: `
     <h2>Thank you for submitting this place</h2>
     <p>Your submission has been flagged. It will be reviewed and posted if we can resolve the issue.</p>

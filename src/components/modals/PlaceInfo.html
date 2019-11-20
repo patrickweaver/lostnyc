@@ -5,6 +5,7 @@
   import Button from "../Button.html";
   
   import shortBody from "../../helpers/shortBody.js";
+  import api from "../../helpers/api.js";
 
   export let closeModal;
   export let memoryTimestamp;
@@ -15,8 +16,7 @@
     
     // Get place details:
     if (!$selectedPlace.name) {
-      const res = await fetch(`/api/places/find/${$selectedPlace.placeId}`);
-      const placeWithMemories = (await res.json())[0];
+      const placeWithMemories = await api.getPlace($selectedPlace.placeId)
       placeWithMemories.memories.map(i => shortBody(i));
       selectedPlace.update(n => placeWithMemories);
     }

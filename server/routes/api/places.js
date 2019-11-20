@@ -10,49 +10,67 @@ const checkLanguage = require('../../helpers/checkLanguage.js');
 
 // All Places:
 router.get("/", async function(req, res) {
-  /*
-  res.json(await Place.findAll({
-    attributes: { include: [
-      [sequelize.fn('COUNT', sequelize.col('flags.flagId')), 'flagsCount'],
-      [sequelize.fn('COUNT', sequelize.col('memories.memoryId')), 'memoriesCount']
-    ]},
-    include: [
-      {model: Flag, as: 'flags', attributes: []},
-      {model: Memory, as: 'memories', attributes: []}
-    ],
-    group: ['place.placeId']
-  }));
-  */
-  
-  
-  res.json((await sequelize.query(`
-    SELECT Places.*,
-    (SELECT COUNT(flagId) FROM Flags
-    WHERE (Flags.placeId = Places.placeId
-    AND Flags.dismissed = false))
-    AS flagsCount,
-    (SELECT COUNT(memoryId) FROM Memories
-    WHERE Memories.placeId = Places.placeId)
-    AS memoriesCount
-    FROM Places
-    LEFT JOIN Flags on Places.placeId = Flags.placeId
-    LEFT JOIN Memories on Places.placeId = Memories.placeId;
-  `))[0])
-  
+  try {
+    res.json((await sequelize.query(`
+      SELECT Places.*,
+      (SELECT COUNT(flagId) FROM Flags
+      WHERE (Flags.placeId = Places.placeId
+      AND Flags.memoryId IS NULL
+      AND Flags.dismissed = false))
+      AS flagsCount,
+      (SELECT COUNT(memoryId) FROM Memories
+      WHERE Memories.placeId = Places.placeId)
+      AS memoriesCount
+      FROM Places
+    `))[0])
+  } catch (err){
+    res.json({error: "Invalid query"})
+  }
 });
 
 // Single Place with Memories:
 router.get("/find/:placeId", async function(req, res) {
-  res.json(await Place.findAll({
-    limit: 1,
-    where: {
-      placeId: req.params.placeId
-    },
-    include: [
-      {model: Memory, as: 'memories'},
-      {model: Flag, as: 'flags'}
-    ]
-  }));
+  try{
+    const place = (await sequelize.query(`
+      SELECT Places.*,
+      (SELECT COUNT(flagId) FROM Flags
+      WHERE (Flags.placeId = Places.placeId
+      AND Flags.dismissed = false))
+      AS flagsCount,
+      (SELECT COUNT(memoryId) FROM Memories
+      WHERE Memories.placeId = Places.placeId)
+      AS memoriesCount
+      FROM Places
+      WHERE Places.placeId = "${req.params.placeId}"
+      LIMIT 1;
+    `))[0]
+
+    const placeMemories = (await sequelize.query(`
+      Select *,
+      (SELECT COUNT(flagId) FROM Flags
+      WHERE (Flags.memoryId = Memories.memoryId
+      AND Flags.dismissed = false)) AS flagsCount
+      FROM Memories
+      WHERE Memories.placeId = "${req.params.placeId}"
+    `))[0]
+    // Only include non-flagged memories
+    const nonFlaggedMemories = placeMemories.filter(i => i.flagsCount === 0);
+
+    const placeFlags = (await sequelize.query(`
+      Select * FROM Flags
+      WHERE (placeId = "${req.params.placeId}"
+      AND memoryId IS NULL
+      AND dismissed = false)
+    `))[0]
+
+    place[0].memories = nonFlaggedMemories || [];
+    place[0].flags = placeFlags || [];
+    res.json(place)
+  } catch (err) {
+    console.log(err);
+    res.json({error: "Invalid query"})
+  }
+  
 })
 
 // New Place:

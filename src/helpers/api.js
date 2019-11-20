@@ -40,6 +40,13 @@ async function getPlaces() {
   return mappedPlaces;
 }
 
+async function getPlace(placeId) {
+  const res = await fetch(`/api/places/find/${placeId}`);
+  const placeWithMemories = (await res.json())[0];
+  return placeWithMemories
+}
+
 module.exports = {
   getPlaces: getPlaces,
+  getPlace: getPlace
 }

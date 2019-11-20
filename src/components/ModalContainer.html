@@ -88,7 +88,7 @@
     right: 0px;
     background-color: #eee;
     border: 2px solid black;
-    padding: 10px;
+    padding: 10px 20px;
     margin: 20px;
     width: Calc(100vw - 40px);
     max-height: Calc(100vh - 140px);
@@ -100,38 +100,22 @@
   
   .flag-button {
     margin: 20px 5px 5px;
+    text-align: left;
   }
   
-  :global(label), :global(input), :global(textarea), :global(select) {
-    display: block;
-    font-size: 18px;
-    line-height: 22px;
-    width: 100%;
-    margin: 3px 0;
+  @media(max-width: 600px) {
+    #modal-container {
+      border: 2px dotted orange;
+      margin: 35px 20px 20px;
+      padding: 10px;
+    }
   }
   
-  :global(textarea) {
-    min-height: 6em;
+  @media(max-width: 350px) {
+    #modal-container {
+      border: 2px dotted green;
+      max-height: Calc(100vh - 50px);
+    }
   }
-  
-  :global(.close-modal) {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 10px;
-    cursor: pointer;
-  }
-  
-  :global(.text-button) {
-    border: none;
-    background-color: inherit;
-    text-decoration: underline;
-    cursor: pointer;
-  }
-  
-  :global(.warning) {
-    color: red;
-  }
-  
   
 </style>

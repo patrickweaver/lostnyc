@@ -5,7 +5,8 @@
   export let closeForm;
   let warning;
   
-  import { modalItem, selectedMemory, selectedPlace } from "../../stores.js";
+  import { message, modalItem, selectedMemory, selectedPlace } from "../../stores.js";
+  import messages from "../../helpers/messages.js";
   
   var flagInput = {body:''};
   if ($selectedPlace) {
@@ -36,10 +37,7 @@
     var response = await fetch(url, options);
     const responseJson = await response.json();
     // Back to place
-    message.update(n => `
-      <h2>Thank you for flagging this.</h2>
-      <p>We will take a look at the item you flagged. If it is inappropriate it will be removed.</p>
-    `);
+    message.update(n => messages.newFlag);
     modalItem.update(n => 'message');
   }
   
