@@ -2,20 +2,21 @@
   import Button from "./components/Button.html";
   import ModalContainer from "./components/ModalContainer.html";
 
+  import { places, selectedPlace, message, modalItem } from "./stores.js";
+  
   import api from "./helpers/api.js";
   import circleProps from "./helpers/circleProps.js";
-
+  import messages from "./helpers/messages.js";
+  
   var map;
-
-  import { places, selectedPlace, message, modalItem } from "./stores.js";
 
   function drawMap() {
     map = L.map("map")
       .setView(MAP_CENTER, MAP_ZOOM)
       .on("click", onMapClick);
-
+    map.zoomControl.setPosition('bottomleft');
     L.tileLayer("TILE_LAYER", {
-      attribution: "TILE_ATTRIBUTION",
+      attribution: '<a href="/map-attribution" target="_blank">Map Attribution</a>',
       maxZoom: 18
     }).addTo(map);
   }
@@ -63,6 +64,12 @@
     modalItem.update(n => "newPlace");
     selectedPlace.update(n => null)
   }
+  
+  function onAboutButtonClick(event) {
+    event.target.blur();
+    modalItem.update(n => "message");
+    message.update(n => messages.about);
+  }
 
   (async function main() {
     // Draw the map
@@ -77,11 +84,26 @@
   })();
 </script>
 
+<div id="title-container-container">
+  <div id="title-container">
+    <h2>
+      Lost NYC
+    </h2>
+    <h4>
+      Presented by the <a class="nycartc" href="http://nycartc.com/" target="_blank">NYC Artist Coalition</a>
+    </h4>
+  </div>
+</div>
+
 <ModalContainer
   drawPlace={drawPlace}
   returnToMap={returnToMap}
 />
-<span id="new-place-button"><Button label={'New Place'} type={'create'} onClick={onNewPlaceButtonClick} /></span>
+
+<ul id="app-buttons">
+  <li id="new-place-button"><Button label={'New Place'} type={'create'} onClick={onNewPlaceButtonClick} /></li>
+  <li id="about-button"><Button label={'About'} type={'cancel'} onClick={onAboutButtonClick} /></li>
+</ul>
 
 <div class="debug">
   <h3>
@@ -92,10 +114,46 @@
 </div>
 
 <style>
-  #new-place-button {
+  #app-buttons {
     z-index: 2;
     position: absolute;
-    bottom: 30px;
-    right: 20px;
+    bottom: 20px;
+    right: 5px;
+    list-style-type: none;
+    margin: 0;
+  }
+  
+  #app-buttons li {
+    display: inline-block;
+  }
+  
+  #new-place-button {
+  }
+  
+  #about-button {
+  }
+  
+  #title-container-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+  
+  #title-container {
+    background: rgba(240, 240, 240, .94);
+    border: 1px solid black;
+    border-radius: 5px;
+    z-index: 5;
+    text-align: center;
+    margin: 10px auto;
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .nycartc {
+    color: #fe3d89;
+    text-decoration: none;
   }
 </style>
