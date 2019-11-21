@@ -43,12 +43,12 @@ router.post('/dismiss', async function (req, res) {
   }
 });
 
-/*
+
 router.post("/delete", async function(req, res) {
   if (process.env.API_KEY && req.body.apiKey === process.env.API_KEY) {
-    const deletedStatus = await Place.destroy({
+    const deletedStatus = await Flag.destroy({
       where: {
-        placeId: req.body.placeId
+        flagId: req.body.flagId
       }
     });
     
@@ -56,12 +56,12 @@ router.post("/delete", async function(req, res) {
       res.status(200).json({ deleted: true });
       return;
     } else {
-      res.status(400).json({deleted: false, error: "No such place"})
+      res.status(400).json({deleted: false, error: "No such flag"})
     }
   } else {
     res.status(400).json({deleted: false, error: "Invalid or missing API Key"});
   }
 });
-*/
+
 
 module.exports = router;

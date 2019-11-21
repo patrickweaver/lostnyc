@@ -1,0 +1,52 @@
+<script>
+  export let place
+  let closeYear
+  
+  // Calculate closeYear:
+  closeYear = place.closeDate
+  ? new Date(place.closeDate).getFullYear()
+  : null;
+  
+</script>
+
+{#if place.name}
+<h2 class="place-name">{place.name}</h2>
+<h3>
+  {place.category}
+</h3>
+<h4>
+  {#if place.openYear || closeYear }
+    {#if place.openYear}
+      {place.openYear} -
+    {:else}
+      Unknown -
+    {/if}
+    {#if closeYear}
+      {closeYear}
+    {:else}
+      Unknown
+    {/if}
+  {/if}
+</h4>
+<p class="address">
+  {place.address}<br />
+  {place.city}
+</p>
+{/if}
+
+<style>
+  .place-name {
+    margin-right: 50px;
+  }
+
+  .address {
+    margin: .125em 0 .25em;
+  }
+  
+  @media (max-width: 350px) {
+    .place-name {
+      margin-right: 0;
+      margin-top: 33px;
+    }
+  }
+</style>

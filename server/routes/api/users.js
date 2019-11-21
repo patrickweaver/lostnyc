@@ -2,13 +2,14 @@ const router = require('express').Router();
 const sequelize = require('../../db/init.js');
 const User = sequelize.import('../../models/user.js');
 const hashPassword = require('../../helpers/hashPassword.js');
-
+/*
 // All Flags
 router.get("/", async function(req, res) {
-  res.json(await User.findAll());
+  //res.json(await User.findAll());
 });
 
 // New Flag:
+
 router.post("/new", async function(req, res) {
   
   const pwHash = hashPassword(req.body.password);
@@ -25,6 +26,7 @@ router.post("/new", async function(req, res) {
   const newUser = await User.create(user)
   res.json(newUser.get());
 });
+
 
 // Delete User:
 router.post("/delete", async function(req, res) {
@@ -50,7 +52,7 @@ router.post("/delete", async function(req, res) {
     res.status(400).json({deleted: false, error: "Invalid or missing API Key"});
   }
 });
-
+*/
 
 
 module.exports = router;

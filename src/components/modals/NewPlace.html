@@ -38,11 +38,9 @@
       fetchOptions.post
     );
     var response = await fetch(url, options);
-    const responseJson = await response.json();
+    const newPlace = await response.json();
     
-    console.log(responseJson);
-    
-    if (responseJson.error) {
+    if (newPlace.error) {
       modalItem.update(n => 'message');
       message.update(n => `
         <h2>Error saving place</h2>
@@ -51,9 +49,10 @@
       return
     }
     
-    addPlace(responseJson);
-    if (responseJson.flags && responseJson.flags[0]) {
-      const flag = responseJson.flags[0]
+    addPlace(newPlace);
+    // If new place was auto-flagged
+    if (newPlace.flags && newPlace.flags[0]) {
+      const flag = newPlace.flags[0]
       if (flag.reason && flag.reason === "Inappropriate Content") {
         message.update(n => messages.inappropriateContent)
       } else if (flag.reason && flag.reason === "Default Location") {
@@ -61,11 +60,12 @@
       } else {
         message.update(n => messages.other)
       }
-      
       modalItem.update(n => 'message');
     } else {
+      // Don't ask db for place info again
+      newPlace.sync = false;
       // Go to new place
-      selectedPlace.update(n => responseJson);
+      selectedPlace.update(n => newPlace);
       modalItem.update(n => 'selectedPlace');
     }
   }

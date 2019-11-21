@@ -52,7 +52,10 @@ router.get("/find/:placeId", async function(req, res) {
       AND Flags.dismissed = false)) AS flagsCount
       FROM Memories
       WHERE Memories.placeId = "${req.params.placeId}"
+      ORDER BY Memories.createdAt DESC;
     `))[0]
+    
+    
     // Only include non-flagged memories
     const nonFlaggedMemories = placeMemories.filter(i => i.flagsCount === 0);
 
@@ -62,6 +65,11 @@ router.get("/find/:placeId", async function(req, res) {
       AND memoryId IS NULL
       AND dismissed = false)
     `))[0]
+    
+    if (placeFlags.length > 0) {
+      res.json({error: 'Flagged Place'})
+      return;
+    }
 
     place[0].memories = nonFlaggedMemories || [];
     place[0].flags = placeFlags || [];

@@ -46,7 +46,14 @@ async function getPlace(placeId) {
   return placeWithMemories
 }
 
+async function getMemoryPlace(memoryId) {
+  const res = await fetch(`api/memories/find/${memoryId}`);
+  const placeWithMemory = (await res.json())[0];
+  return placeWithMemory
+}
+
 module.exports = {
   getPlaces: getPlaces,
-  getPlace: getPlace
+  getPlace: getPlace,
+  getMemoryPlace: getMemoryPlace
 }

@@ -122,6 +122,7 @@ function findUserByUserId(userId, cb) {
 /* - - - - - - - - - - - - */
 /* Routes: */
 /* - - - - - - - - - - - - */
+
 const memories = require('./routes/api/memories.js');
 app.use('/api/memories', memories);
 const places = require('./routes/api/places.js');

@@ -40,7 +40,10 @@
   function addMemoryToPlace(memory) {
     const memoryWithShortBody = shortBody(memory);
     selectedPlace.update(n => {
-      n.memories.push(memoryWithShortBody);
+      if (!n.memories) {
+        n.memories = [];
+      }
+      n.memories.unshift(memoryWithShortBody);
       return n;
     });
   }
@@ -49,9 +52,9 @@
 </script>
 
 <div id="new-memory-form" class="form">
-  <h1>
+  <h3>
     New Memory of {$selectedPlace.name}
-  </h1>
+  </h3>
   {#if warning}
   <p class="warning">
     {warning}

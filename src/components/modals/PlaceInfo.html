@@ -3,30 +3,34 @@
   import { modalItem, selectedPlace, selectedMemory } from "../../stores.js";
 
   import Button from "../Button.html";
+  import PlaceDetails from "../PlaceDetails.html"
   
   import shortBody from "../../helpers/shortBody.js";
   import api from "../../helpers/api.js";
 
   export let closeModal;
   export let memoryTimestamp;
-  let closeYear;
+  let update = true;
 
   beforeUpdate(async () => {
     console.log("beforeUpdate");
-    
-    // Get place details:
-    if (!$selectedPlace.name) {
-      const placeWithMemories = await api.getPlace($selectedPlace.placeId)
-      placeWithMemories.memories.map(i => shortBody(i));
-      selectedPlace.update(n => placeWithMemories);
-    }
-    
-    // Calculate closeYear:
-    closeYear = $selectedPlace.closeDate
-    ? new Date($selectedPlace.closeDate).getFullYear()
-    : null;
-  });
 
+    // Get place details:
+    if ($selectedPlace.sync) {
+      const placeWithMemories = await api.getPlace($selectedPlace.placeId)
+
+      if (!placeWithMemories.error) {
+        console.log(new Date());
+        placeWithMemories.memories.map(i => shortBody(i));
+        selectedPlace.update(n => placeWithMemories);
+      } else {
+        console.log("ERROR")
+        console.log(placeWithMemories.error);
+      }
+    }
+    // Set URL:
+    window.location.hash = 'places/' + $selectedPlace.placeId;
+  });
   
 
   function onNewMemoryButtonClick() {
@@ -46,40 +50,23 @@
   Close
 </button>
 
-{#if $selectedPlace.name}
 <div>
-  <h2>{$selectedPlace.name}</h2>
-  <h3>
-    {$selectedPlace.category}
-  </h3>
-  <h4>
-    {#if $selectedPlace.openYear || closeYear }
-      {#if $selectedPlace.openYear}
-        {$selectedPlace.openYear} -
-      {:else}
-        Unknown -
-      {/if}
-      {#if closeYear}
-        {closeYear}
-      {:else}
-        Unknown
-      {/if}
-    {/if}
-  </h4>
-  <p>
-    {$selectedPlace.address}<br />
-    {$selectedPlace.city}
-  </p>
+  
+  <PlaceDetails place={$selectedPlace} />
 
   <Button label={'New Memory'} type={'create'} onClick={onNewMemoryButtonClick}
   /> {#if $selectedPlace.memories}
-  <ul>
+  <ul class="memory-list">
     {#each $selectedPlace.memories as memory, index}
-    <li>
+    <li class="memory">
       <p>{memory.shortBody}
-        {#if memory.body.length > 240}
-          <span class="text-button" on:click="{() => seeFullMemory(index)}">Read More</span>
-        {/if}
+        <a href="/#memories/{memory.memoryId}" class="text-button" on:click="{() => seeFullMemory(index)}">
+          {#if memory.body.length > 240}
+            Read More
+          {:else}
+            <span class="memoryLink">🔗</span>
+          {/if}
+        </a>
       </p>
       <p>
         - {#if memory.author}{memory.author}{:else}Anonymous{/if} {memoryTimestamp(memory)}
@@ -89,7 +76,6 @@
   </ul>
   {/if}
 </div>
-{/if}
 
 <style>
   

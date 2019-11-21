@@ -14,6 +14,45 @@ router.get("/", async function(req, res) {
   }));
 });
 
+
+// Single Memory:
+
+router.get("/find/:memoryId", async function(req, res) {
+  try {
+    
+    const memoryArray = (await sequelize.query(`
+      SELECT Memories.*,
+      (SELECT COUNT(flagId) FROM Flags
+      WHERE (Flags.memoryId = "${req.params.memoryId}"
+      AND Flags.dismissed = false))
+      AS flagsCount
+      FROM Memories
+      WHERE Memories.memoryId = "${req.params.memoryId}"
+      LIMIT 1;
+    `))[0];
+    
+    if (memoryArray[0].flagsCount > 0) {
+      res.json({error: 'Flagged Memory'})
+      return;
+    }
+    
+    
+    const place = (await sequelize.query(`
+      SELECT Places.*
+      FROM Places
+      WHERE Places.placeId = "${memoryArray[0].placeId}"
+      LIMIT 1;
+    `))[0]
+
+    place[0].memories = memoryArray;
+    
+    res.json(place)
+  } catch (err) {
+    console.log(err);
+    res.json({error: "Invalid query"})
+  }
+});
+
 // Memories from one place:
 router.get("/:placeId", async function(req, res) {
   res.json(await Memory.findAll({
