@@ -13,6 +13,7 @@
   
   export let drawPlace;
   export let returnToMap;
+  export let recenterOnPlace;
   
   const displayPlaceInfo = '';
   
@@ -64,6 +65,7 @@
       <PlaceInfo
         closeModal={returnToMap}
         memoryTimestamp={memoryTimestamp}
+        recenterOnPlace={recenterOnPlace}
       />
     {/if}
   
@@ -85,11 +87,12 @@
     z-index: 100;
     position: fixed;
     top: 0px;
-    right: 0px;
+    left: 0;
+    right: 0;
     background-color: #eee;
     border: 2px solid black;
     padding: 10px 20px;
-    margin: 20px;
+    margin: 20px auto;
     width: Calc(100vw - 40px);
     max-height: Calc(100vh - 140px);
     max-width: 600px;
@@ -105,7 +108,7 @@
   
   @media(max-width: 600px) {
     #modal-container {
-      margin: 35px 20px 20px;
+      margin: 35px 20px 120px;
       padding: 10px;
     }
   }
@@ -113,6 +116,7 @@
   @media(max-width: 350px) {
     #modal-container {
       max-height: Calc(100vh - 50px);
+      
     }
   }
   

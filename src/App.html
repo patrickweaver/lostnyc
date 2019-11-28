@@ -67,6 +67,12 @@
       .addTo(map)
       .on("click", onMarkerClick);
     if (recenter) {
+      recenterOnPlace(place);
+    }
+  }
+  
+  function recenterOnPlace(place) {
+    if (place.lat && place.long) {
       map.panTo(new L.LatLng(place.lat, place.long));
     }
   }
@@ -173,6 +179,7 @@
 <ModalContainer
   drawPlace={drawPlace}
   returnToMap={returnToMap}
+  recenterOnPlace={recenterOnPlace}
 />
 
 <div class="debug">

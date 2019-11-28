@@ -1,5 +1,5 @@
 <script>
-  import { beforeUpdate } from "svelte";
+  import { beforeUpdate, afterUpdate } from "svelte";
   import { modalItem, selectedPlace, selectedMemory } from "../../stores.js";
 
   import Button from "../Button.html";
@@ -10,6 +10,7 @@
 
   export let closeModal;
   export let memoryTimestamp;
+  export let recenterOnPlace;
   let update = true;
 
   beforeUpdate(async () => {
@@ -30,6 +31,11 @@
     }
     // Set URL:
     window.location.hash = 'places/' + $selectedPlace.placeId;
+  });
+  
+  afterUpdate(() => {
+    console.log("afterUpdate");
+    recenterOnPlace($selectedPlace);
   });
   
 

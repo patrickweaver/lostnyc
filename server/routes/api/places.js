@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const rp = require('request-promise');
 const Sequelize = require('sequelize');
+const Op = Sequelize.Op
 const sequelize = require('../../db/init.js');
 const Place = sequelize.import('../../models/place.js');
 const Memory = sequelize.import('../../models/memory.js');
@@ -28,7 +29,7 @@ router.get("/", async function(req, res) {
   }
 });
 
-// Single Place with Memories:
+// Single Place with Memories by placeId:
 router.get("/find/:placeId", async function(req, res) {
   try{
     const place = (await sequelize.query(`
@@ -78,8 +79,50 @@ router.get("/find/:placeId", async function(req, res) {
     console.log(err);
     res.json({error: "Invalid query"})
   }
-  
 })
+
+// Single Place by Name or Address:
+router.get("/search", async function(req, res) {
+  console.log("QUERY:");
+  console.log(req.query)
+  const nameQuery = req.query.name;
+  const addressQuery = req.query.address;
+  let namePlaces = []
+  
+  if (addressQuery != undefined) {
+    console.log("ADDRESS QUERY:", addressQuery, addressQuery === undefined, addressQuery == undefined, typeof addressQuery);
+  } else {
+    console.log("NO A Q:")
+  }
+  
+  let where = {};
+  if (nameQuery) {
+    where.name = {[Op.like]: `%${nameQuery}%` };
+  }
+  if (addressQuery) {
+    where.address = {[Op.like]: `%${addressQuery}%` };
+  }
+  
+  console.log("WHERE");
+  console.log(where);
+  
+  try {
+    namePlaces = await Place.findAll({
+      where: where,
+      limit: 10
+    })
+
+    console.log("NAME PLACES:")
+    console.log(namePlaces);
+
+  } catch(err) {
+    console.log('Error:\n', err);
+  }
+  
+  let responseArray = [];
+  responseArray.concat(namePlaces);
+  res.json(namePlaces)
+});
 
 // New Place:
 router.post("/new", async function(req, res) {
@@ -91,37 +134,52 @@ router.post("/new", async function(req, res) {
       key: process.env.GCP_API_KEY
     }
   }
-  const geolocationResponse = JSON.parse(await rp(geolocationOptions));
-  const location = geolocationResponse.results[0].geometry.location;
   
-  var flagForDefaultLocation = false;
-  const locationLat = parseFloat(location.lat);
-  const locationLong = parseFloat(location.lng);
-  if (
-    locationLat > process.env.DEFAULT_LAT_MIN
-    && locationLat < process.env.DEFAULT_LAT_MAX
-    && locationLong > process.env.DEFAULT_LONG_MIN
-    && locationLong < process.env.DEFAULT_LONG_MAX
-  ) {
-    flagForDefaultLocation = true;
+  let location;
+  try {
+    const geolocationResponse = JSON.parse(await rp(geolocationOptions));
+    location = geolocationResponse.results[0].geometry.location;
+  } catch (err) {
+    console.log("Error getting location.")
+    console.log(err);
   }
   
-  const place = {
-    lat: parseFloat(locationLat),
-    long: parseFloat(locationLong),
-    name: req.body.name,
-    address: req.body.address,
-    city: req.body.city,
-    state: req.body.state,
-    zip: req.body.zip,
-    openYear: req.body.openYear,
-    closeDate: new Date(req.body.closeDate),
-    cityCouncilDistrict: req.body.cityCouncilDistrict,
-    category: req.body.category
+  let place;
+  try {
+    if (!location) { throw "Location not found."}
+    var flagForDefaultLocation = false;
+    const locationLat = parseFloat(location.lat);
+    const locationLong = parseFloat(location.lng);
+    if (
+      locationLat > process.env.DEFAULT_LAT_MIN
+      && locationLat < process.env.DEFAULT_LAT_MAX
+      && locationLong > process.env.DEFAULT_LONG_MIN
+      && locationLong < process.env.DEFAULT_LONG_MAX
+    ) {
+      flagForDefaultLocation = true;
+    }
+
+    place = {
+      lat: parseFloat(locationLat),
+      long: parseFloat(locationLong),
+      name: req.body.name,
+      address: req.body.address,
+      city: req.body.city,
+      state: req.body.state,
+      zip: req.body.zip,
+      openYear: req.body.openYear,
+      closeDate: new Date(req.body.closeDate),
+      cityCouncilDistrict: req.body.cityCouncilDistrict,
+      category: req.body.category
+    }
+  } catch (err) {
+    console.log("Error creating place");
+    console.log(err);
   }
   
   var savedPlace;
   try {
+    if (!place) { throw "Error creating place"};
     const newPlace = await Place.create(place)
     savedPlace = newPlace.get();
 
@@ -147,8 +205,7 @@ router.post("/new", async function(req, res) {
       savedPlace.flags[0].reason = flagReason;
     }
   } catch (err) {
-    
-    console.log("ERROR:");
+    console.log("Error with auto flagging or before");
     console.log(err);
     
     savedPlace = {error: "Place not saved"}

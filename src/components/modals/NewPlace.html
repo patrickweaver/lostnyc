@@ -1,5 +1,6 @@
 <script>
   import Button from "../Button.html";
+  import SearchResults from "../SearchResults.html";
   import fetchOptions from "../../helpers/fetchOptions.js";
 
   export let closeForm;
@@ -12,6 +13,34 @@
   let placeInput = { state: "NY" };
   let warning;
   let otherCategory;
+  let searchResults;
+  let searchField;
+  
+  async function onNameOrAddressChange(event) {
+    searchField = event.target.id;
+    try {
+      let url = "/api/places/search?";
+      if (placeInput.name) {
+        url += `name=${placeInput.name}&`;
+      }
+      if (placeInput.address) {
+        url += `address=${placeInput.address}`;
+      }
+      var response = await fetch(url);
+      searchResults = await response.json();
+    } catch (err) {
+      console.log("Error: Place search error");
+    }
+  }
+  
+  function clearSearchResults() {
+    searchResults = null;
+  }
+  
+  function selectSearchResult(selectedResult) {
+    selectedPlace.update(n => {return {placeId: selectedResult.placeId, sync: true}});
+    modalItem.update(n => 'selectedPlace');
+  }
 
   async function submitForm(event) {
     event.target.blur();
@@ -80,7 +109,7 @@
   
   
 </script>
-<button class="text-button close-modal" on:click={closeForm}>
+<button class="text-button close-modal" on:click="{closeForm}">
   Close
 </button>
 <div id="new-place-form" class="form">
@@ -94,9 +123,9 @@
   {/if}
   <form autocomplete="off">
     <label>Place Name:</label>
-    <input bind:value="{placeInput.name}" type="text" autocomplete="off" />
+    <input bind:value="{placeInput.name}" on:keyup="{onNameOrAddressChange}" on:blur="{clearSearchResults}" type="text" autocomplete="off" id="place-name-field" />
     <label>Address:</label>
-    <input bind:value="{placeInput.address}" type="text" autocomplete="off" />
+    <input bind:value="{placeInput.address}" on:keyup="{onNameOrAddressChange}" on:blur="{clearSearchResults}" type="text" autocomplete="off" id="place-address-field" />
     <label>City:</label>
     <input bind:value="{placeInput.city}" type="text" autocomplete="off" />
     <label>State:</label>
@@ -130,5 +159,11 @@
   </form>
 </div>
 
+<SearchResults searchResults={searchResults} selectSearchResult={selectSearchResult} searchField={searchField} />
+
 <style>
+  
+  #new-place-form {
+    position: relative;
+  }
 </style>

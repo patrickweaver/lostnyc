@@ -13,7 +13,7 @@ dependencies:
   pug: 2.0.4
   request: 2.88.0
   request-promise: 4.2.5
-  rollup: 1.27.2
+  rollup: 1.27.5
   rollup-plugin-commonjs: 10.1.0
   rollup-plugin-node-resolve: 5.2.0
   rollup-plugin-svelte: 5.1.1
@@ -45,14 +45,18 @@ packages:
     dev: false
     resolution:
       integrity: sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==
+  /@types/estree/0.0.40:
+    dev: false
+    resolution:
+      integrity: sha512-p3KZgMto/JyxosKGmnLDJ/dG5wf+qTRMUjHJcspC2oQKa4jP7mz+tv0ND56lLBu3ojHlhzY33Ol+khLyNmilkA==
+  /@types/node/12.12.14:
+    dev: false
+    resolution:
+      integrity: sha512-u/SJDyXwuihpwjXy7hOOghagLEV1KdAST6syfnOk6QZAMzZuWZqXy5aYYZbh8Jdpd4escVFP0MvftHNDb9pruA==
   /@types/node/12.12.7:
     dev: false
     resolution:
       integrity: sha512-E6Zn0rffhgd130zbCbAr/JdXfXkoOUFAKNs/rF8qnafSJ8KYaA/j3oz7dcwal+lYjLA7xvdd5J4wdYpCTlP8+w==
-  /@types/node/12.12.8:
-    dev: false
-    resolution:
-      integrity: sha512-XLla8N+iyfjvsa0KKV+BP/iGSoTmwxsu5Ci5sM33z9TjohF72DEz95iNvD6pPmemvbQgxAv/909G73gUn8QR7w==
   /@types/resolve/0.0.8:
     dependencies:
       '@types/node': 12.12.7
@@ -1708,6 +1712,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-B/dOmuoAik5bKcD6s6nXDCjzUKnaDvdkRyAk6rsmsKLipWj4797iothd7jmmUhWTfinVMU+wc56rYKsit2Qy4w==
+  /resolve/1.13.1:
+    dependencies:
+      path-parse: 1.0.6
+    dev: false
+    resolution:
+      integrity: sha512-CxqObCX8K8YtAhOBRg+lrcdn+LK+WYOS8tSjqSFbjtrI5PnS63QPhZl4+yKfrU9tdsbMu9Anr/amegT87M9Z6w==
   /retry-as-promised/3.2.0:
     dependencies:
       any-promise: 1.3.0
@@ -1734,7 +1744,7 @@ packages:
       estree-walker: 0.6.1
       is-reference: 1.1.4
       magic-string: 0.25.4
-      resolve: 1.12.0
+      resolve: 1.13.1
       rollup-pluginutils: 2.8.2
     dev: false
     peerDependencies:
@@ -1770,15 +1780,15 @@ packages:
     dev: false
     resolution:
       integrity: sha512-EEp9NhnUkwY8aif6bxgovPHMoMoNr2FulJziTndpt5H9RdwC47GSGuII9XxpSdzVGM0GWrNPHV6ie1LTNJPaLQ==
-  /rollup/1.27.2:
+  /rollup/1.27.5:
     dependencies:
-      '@types/estree': 0.0.39
-      '@types/node': 12.12.8
+      '@types/estree': 0.0.40
+      '@types/node': 12.12.14
       acorn: 7.1.0
     dev: false
     hasBin: true
     resolution:
-      integrity: sha512-sD3iyd0zlvgK1S3MmICi6F/Y+R/QWY5XxzsTGN4pAd+nCasDUizmAhgq2hdh1t2eLux974NHU2TW41fhuGPv+Q==
+      integrity: sha512-8rfVdzuTg2kt8ObD9LNJpEwUN7B6lsl3sHc5fddtgICpLjpYeSf4m2+RftBzcCaBTMi1iYX3Ez8zFT4Gj2nJjg==
   /safe-buffer/5.1.2:
     dev: false
     resolution:
@@ -2282,8 +2292,8 @@ specifiers:
   pug: ^2.0.4
   request: ^2.88.0
   request-promise: ^4.2.5
-  rollup: ^1.27.2
-  rollup-plugin-commonjs: ^10.0.2
+  rollup: ^1.27.5
+  rollup-plugin-commonjs: ^10.1.0
   rollup-plugin-node-resolve: ^5.1.1
   rollup-plugin-svelte: ^5.1.0
   sequelize: ^6.0.0
