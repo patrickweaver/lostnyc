@@ -18,6 +18,10 @@
   
   async function onNameOrAddressChange(event) {
     searchField = event.target.id;
+    if (!placeInput.name && !placeInput.address) {
+      clearSearchResults();
+      return;
+    }
     try {
       let url = "/api/places/search?";
       if (placeInput.name) {
@@ -34,7 +38,9 @@
   }
   
   function clearSearchResults() {
-    searchResults = null;
+    setTimeout(() => {
+      searchResults = null;
+    }, 300);
   }
   
   function selectSearchResult(selectedResult) {

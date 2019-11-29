@@ -14,7 +14,6 @@
   let update = true;
 
   beforeUpdate(async () => {
-    console.log("beforeUpdate");
 
     // Get place details:
     if ($selectedPlace.sync) {
@@ -34,7 +33,6 @@
   });
   
   afterUpdate(() => {
-    console.log("afterUpdate");
     recenterOnPlace($selectedPlace);
   });
   

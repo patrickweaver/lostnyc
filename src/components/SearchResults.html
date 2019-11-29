@@ -11,7 +11,7 @@
   let top = "30px";
   
   afterUpdate(() => {
-  
+    // Position search results under correct field
     if (searchField) {
       const modalContainer = document.getElementById('modal-container');
       const placeNameField = document.getElementById('place-name-field');
@@ -23,8 +23,6 @@
         rect = placeAddressField.getBoundingClientRect();
       }
       var mcRect = modalContainer.getBoundingClientRect();
-      console.log("RECT:");
-      console.log(rect);
       top = '' + (rect.bottom - mcRect.top) + 'px';
     }
   });
@@ -60,7 +58,7 @@
     background-color: white;
     width: Calc(100% - 10px);
     border: 1px solid #fe3d89;
-    border-radius: 0 5px;
+    border-radius: 5px;
     margin: 5px;
   }
   
@@ -71,12 +69,17 @@
   }
   
   li.search-result {
-    padding: 2px 10px 5px;
+    margin: 1px;
+    padding: 2px 10px;
     cursor: pointer;
   }
   
   li.search-result:hover {
     background-color: #EEF;
+  }
+  
+  li h5 {
+    margin: 3px 0;
   }
 
 
