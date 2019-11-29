@@ -6,7 +6,15 @@ const post = {
   }
 }
 
+const postFiles = {
+  method: 'POST',
+  headers: {
+    'Accept': 'application/json'
+  }
+}
+
 
 module.exports = {
-  post: post
+  post: post,
+  postFiles: postFiles
 }

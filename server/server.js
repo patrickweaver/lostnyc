@@ -7,7 +7,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({limit: '10mb', extended: true}));
 app.use(require('cookie-parser')());
 app.use(express.static('server/public'));
 

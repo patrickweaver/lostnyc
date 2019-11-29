@@ -63,9 +63,7 @@ async function upload(upload) {
 }
 
 async function getSignedUrl(key) {
-  
   //console.log("KEY:", key)
-  
   var params = {
     Bucket: bucketName,
     Key: key

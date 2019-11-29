@@ -6,8 +6,10 @@ const sequelize = require('../../db/init.js');
 const Place = sequelize.import('../../models/place.js');
 const Memory = sequelize.import('../../models/memory.js');
 const Flag = sequelize.import('../../models/flag.js');
+const Photo = sequelize.import('../../models/photo.js');
 
 const checkLanguage = require('../../helpers/checkLanguage.js');
+const aws = require('../../helpers/aws.js');
 
 // All Places:
 router.get("/", async function(req, res) {
@@ -56,6 +58,13 @@ router.get("/find/:placeId", async function(req, res) {
       ORDER BY Memories.createdAt DESC;
     `))[0]
     
+    const placePhotos = (await sequelize.query(`
+      Select * FROM Photos
+      WHERE (Photos.placeId = "${req.params.placeId}"
+      AND Photos.approved = 0)
+      ORDER BY createdAt DESC;
+    `))[0]
+    
     
     // Only include non-flagged memories
     const nonFlaggedMemories = placeMemories.filter(i => i.flagsCount === 0);
@@ -71,9 +80,17 @@ router.get("/find/:placeId", async function(req, res) {
       res.json({error: 'Flagged Place'})
       return;
     }
+    
+    // Get URLs for Photos
+    var photosWithUrls = [];
+    for (var i in placePhotos) {
+      const url = await aws.getSignedUrl(placePhotos[i].photoId);
+      photosWithUrls.push(Object.assign(placePhotos[i], {url: url}));
+    }
 
     place[0].memories = nonFlaggedMemories || [];
     place[0].flags = placeFlags || [];
+    place[0].photos = photosWithUrls || [];
     res.json(place)
   } catch (err) {
     console.log(err);

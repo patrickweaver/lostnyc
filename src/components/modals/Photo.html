@@ -1,0 +1,29 @@
+<script>
+  import { selectedPhoto  } from "../../stores.js";
+  export let returnToMap;
+
+</script>
+
+<button class="text-button close-modal" on:click={returnToMap}>
+  Back to Map
+</button>
+
+<div id="photo-container">
+  
+  <img src="{$selectedPhoto .url}" class="view-photo" alt="A photo of this place." />
+  
+  <button class="text-button" on:click={returnToMap}>
+  Done
+  </button>
+  
+</div>
+
+<style>
+  .view-photo {
+    width: 100%;
+    height: auto;
+    margin-top: 20px;
+    overflow: scroll;
+  }
+
+</style>

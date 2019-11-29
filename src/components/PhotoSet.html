@@ -1,0 +1,42 @@
+<script>
+  import { modalItem, selectedPhoto } from "../stores.js";
+  export let photos;
+  
+  function viewPhoto(photo) {
+    selectedPhoto .update(n => photo);
+    modalItem.update(n => "photo");
+  }
+</script>
+
+<h2>
+  Photos:
+</h2>
+
+<ul class="photo-set">
+  {#each photos as photo}
+    <li>
+      <img src="{photo.url}" alt="A photo of this place" on:click="{() => viewPhoto(photo)}" />
+  </li>
+  {/each}
+</ul>
+
+<style>
+  .photo-set {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+  }
+  
+  .photo-set li {
+    display: inline-block;
+    margin: 5px;
+  }
+  
+  .photo-set li img {
+    width: auto;
+    height: 75px;
+    cursor: pointer;
+  }
+
+
+</style>

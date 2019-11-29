@@ -4,14 +4,19 @@
 
   import Button from "../Button.html";
   import PlaceDetails from "../PlaceDetails.html"
+  import PhotoSet from "../PhotoSet.html";
+  import Spinner from "../Spinner.html";
   
   import shortBody from "../../helpers/shortBody.js";
   import api from "../../helpers/api.js";
+  import fetchOptions from "../../helpers/fetchOptions.js";
 
   export let closeModal;
   export let memoryTimestamp;
   export let recenterOnPlace;
   let update = true;
+  let photo;
+  let spinner = false;
 
   beforeUpdate(async () => {
 
@@ -41,6 +46,36 @@
     modalItem.update(n => "newMemory");
     // Don't reset selectedPlace here
   }
+  
+  async function onNewPhotoInputChange(event) {
+    spinner = true;
+    photo = event.target.files[0];
+    
+    var formData = new FormData();
+    formData.append('placeId', $selectedPlace.placeId);
+    formData.append('file', photo);
+    formData.append('async', true);
+    
+    const url = "/api/photos/new";
+    const options = Object.assign(
+      { body: formData },
+      fetchOptions.postFiles
+    );
+    var response = await fetch(url, options);
+    const responseJson = await response.json();
+    spinner = false;
+    addPhotoToPlace(responseJson);
+  }
+  
+  function addPhotoToPlace(photo) {
+    selectedPlace.update(n => {
+      if (!n.photos) {
+        n.photos = [];
+      }
+      n.photos.unshift(photo);
+      return n;
+    });
+  }
 
   function seeFullMemory(index) {
     selectedMemory.update(n => $selectedPlace.memories[index]);
@@ -54,12 +89,17 @@
   Close
 </button>
 
-<div>
+<div id="place-info">
+  {#if spinner}
+  <Spinner />
+  {/if}
   
   <PlaceDetails place={$selectedPlace} />
 
-  <Button label={'New Memory'} type={'create'} onClick={onNewMemoryButtonClick}
-  /> {#if $selectedPlace.memories}
+  <Button label={'Add Memory'} type={'create'} onClick={onNewMemoryButtonClick} />
+  <Button label={'Add Photo'} type={'file'} onChange={onNewPhotoInputChange} />
+  
+  {#if $selectedPlace.memories}
   <ul class="memory-list">
     {#each $selectedPlace.memories as memory, index}
     <li class="memory">
@@ -79,8 +119,15 @@
     {/each}
   </ul>
   {/if}
+  
+  {#if $selectedPlace.photos}
+    <PhotoSet photos={$selectedPlace.photos} />
+  {/if}
+  
 </div>
 
 <style>
-  
+  #place-info {
+    position: relative;
+  }
 </style>

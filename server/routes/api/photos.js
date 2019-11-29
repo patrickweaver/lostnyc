@@ -37,6 +37,7 @@ router.get("/", async function(req, res) {
 
 // New Photo:
 router.post('/new', memoryUpload, async function(req, res) {
+  console.log("PLACEID:", req.body.placeId);
   var error = false;
   var errorMessage = "";
   const file = req.file;
@@ -58,18 +59,17 @@ router.post('/new', memoryUpload, async function(req, res) {
     const response = await aws.upload(upload);
 
     if (response.success && !response.error) {
-      console.log("SUCCESS")
-      console.log(response)
-      console.log("URL")
-      console.log(response.url)
-      
-      
       const photo = {
-        photoId: upload.id
+        photoId: upload.id,
+        placeId: req.body.placeId
       }
 
       const newPhoto = await Photo.create(photo)
-      res.json(newPhoto.get());
+      const photoSuccess = newPhoto.get();
+      const url = await aws.getSignedUrl(photoSuccess.photoId);
+      const photoWithUrl = Object.assign(photoSuccess, {url: url})
+      
+      res.json(photoWithUrl);
       
     } else {
       res.status(500).send({error: 'Error'})

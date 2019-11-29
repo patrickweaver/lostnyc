@@ -9,6 +9,7 @@
   import NewMemoryForm from './modals/NewMemory.html';
   import Message from './modals/Message.html';
   import NewPlaceForm from './modals/NewPlace.html';
+  import Photo from './modals/Photo.html';
   import PlaceInfo from './modals/PlaceInfo.html';
   
   export let drawPlace;
@@ -60,6 +61,9 @@
       />
     {:else if $modalItem === 'message'}
       <Message returnToMap={returnToMap} />
+    
+    {:else if $modalItem === 'photo'}
+      <Photo returnToMap={returnToMap} />
     
     {:else if $modalItem === 'selectedPlace' && $selectedPlace}
       <PlaceInfo
