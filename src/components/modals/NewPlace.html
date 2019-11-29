@@ -1,6 +1,7 @@
 <script>
   import Button from "../Button.html";
   import SearchResults from "../SearchResults.html";
+  import Spinner from "../Spinner.html";
   import fetchOptions from "../../helpers/fetchOptions.js";
 
   export let closeForm;
@@ -15,6 +16,7 @@
   let otherCategory;
   let searchResults;
   let searchField;
+  let spinner = false;
   
   async function onNameOrAddressChange(event) {
     searchField = event.target.id;
@@ -50,7 +52,7 @@
 
   async function submitForm(event) {
     event.target.blur();
-    
+    spinner = true;
     // Check for required fields
     if (!placeInput.name || !placeInput.address) {
       warning = "Please add the name and address of the place."
@@ -119,6 +121,9 @@
   Close
 </button>
 <div id="new-place-form" class="form">
+  {#if spinner}
+  <Spinner />
+  {/if}
   <h1>
     New Place
   </h1>
