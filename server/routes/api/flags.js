@@ -43,7 +43,7 @@ router.post('/dismiss', async function (req, res) {
   }
 });
 
-
+// Delte flag
 router.post("/delete", async function(req, res) {
   if (process.env.API_KEY && req.body.apiKey === process.env.API_KEY) {
     const deletedStatus = await Flag.destroy({

@@ -138,7 +138,8 @@ const auth = require('./routes/authentication.js')(passport);
 app.use('/auth', auth);
 const adminFlags = require('./routes/admin/flags.js');
 app.use('/admin/flags', adminFlags);
-
+const adminPhotos = require('./routes/admin/photos.js');
+app.use('/admin/photos', adminPhotos);
 
 // Redirects:
 app.all('/login', function(req, res) {

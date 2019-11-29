@@ -61,7 +61,7 @@ router.get("/find/:placeId", async function(req, res) {
     const placePhotos = (await sequelize.query(`
       Select * FROM Photos
       WHERE (Photos.placeId = "${req.params.placeId}"
-      AND Photos.approved = 0)
+      AND Photos.approved = 1)
       ORDER BY createdAt DESC;
     `))[0]
     

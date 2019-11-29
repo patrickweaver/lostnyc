@@ -1,0 +1,18 @@
+extends ../layout.pug
+
+block content
+
+  h2 Photos Approval Queue
+
+  ul(class="admin-list")
+    each photo in photos
+      li(class="admin-flag")
+        ul
+          li
+            h4 Place:
+          li #{photo.placeName}
+          li #{photo.placeAddress}
+          li 
+            h4 Photo:
+          li
+            img(src="#{photo.url}")

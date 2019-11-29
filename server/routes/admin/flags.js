@@ -47,22 +47,4 @@ router.get('/place', async function(req, res) {
   res.render('admin/flags/place', {flags: flags})
 })
 
-
-
-
-
-// New Flag:
-/*
-router.post("/new", async function(req, res) {
-  const flag = {
-    body: req.body.body,
-    placeId: req.body.placeId,
-    memoryId: req.body.memoryId
-  }
-  
-  const newFlag = await Flag.create(flag)
-  res.json(newFlag.get());
-});
-*/
-
 module.exports = router;
