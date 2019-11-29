@@ -20,7 +20,14 @@
   
   async function onNameOrAddressChange(event) {
     searchField = event.target.id;
-    if (!placeInput.name && !placeInput.address) {
+    if (
+      // this isn't exactly the logic I was intending but it sort of works
+      (!placeInput.name && !placeInput.address)
+      || (
+        (!placeInput.name || placeInput.name.length < 3)
+        && (!placeInput.address || placeInput.address.length < 3)
+      )
+    ) {
       clearSearchResults();
       return;
     }

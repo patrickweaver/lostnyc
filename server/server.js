@@ -24,6 +24,7 @@ const sequelize = require('./db/init.js');
 const Place = sequelize.import('./models/place.js');
 const Memory = sequelize.import('./models/memory.js');
 const Flag = sequelize.import('./models/flag.js');
+const Photo = sequelize.import('./models/photo.js');
 const User = sequelize.import('./models/user.js');
 sequelize.sync();
 
@@ -129,6 +130,8 @@ const places = require('./routes/api/places.js');
 app.use('/api/places', places);
 const flags = require('./routes/api/flags.js');
 app.use('/api/flags', flags);
+const  photos = require('./routes/api/photos.js');
+app.use('/api/photos', photos);
 const users = require('./routes/api/users.js');
 app.use('/api/users', users);
 const auth = require('./routes/authentication.js')(passport);

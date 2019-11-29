@@ -10,9 +10,3 @@ module.exports = (sequelize, DataTypes) => {
   }, { sequelize });
   return Flag;
 }
-
-
-/*
-type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDv4
-            */
