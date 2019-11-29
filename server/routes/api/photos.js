@@ -14,6 +14,7 @@ var memoryUpload = multer({
 }).single('file');
 
 const aws = require('../../helpers/aws.js');
+const getPhotosWithUrls = require('../../helpers/getPhotosWithUrls.js');
 
 
 // All Photos
@@ -21,13 +22,7 @@ router.get("/", async function(req, res) {
   
   try {
     const photos = await Photo.findAll({raw: true});
-
-    var photosWithUrls = [];
-    for (var i in photos) {
-      const url = await aws.getSignedUrl(photos[i].photoId);
-      photosWithUrls.push(Object.assign(photos[i], {url: url}));
-    }
-    
+    const photosWithUrls = await getPhotosWithUrls(photos);
     res.json(photosWithUrls);
     
   } catch (err) {

@@ -14,3 +14,8 @@ h1, h2, h3, h4 {
   border: 2px solid: #9563B2;
   margin: 20px 0;
 }
+
+.admin-photo {
+  width: 200px;
+  height: auto;
+}

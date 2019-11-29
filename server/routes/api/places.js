@@ -9,7 +9,7 @@ const Flag = sequelize.import('../../models/flag.js');
 const Photo = sequelize.import('../../models/photo.js');
 
 const checkLanguage = require('../../helpers/checkLanguage.js');
-const aws = require('../../helpers/aws.js');
+const getPhotosWithUrls = require('../../helpers/getPhotosWithUrls.js');
 
 // All Places:
 router.get("/", async function(req, res) {
@@ -82,11 +82,7 @@ router.get("/find/:placeId", async function(req, res) {
     }
     
     // Get URLs for Photos
-    var photosWithUrls = [];
-    for (var i in placePhotos) {
-      const url = await aws.getSignedUrl(placePhotos[i].photoId);
-      photosWithUrls.push(Object.assign(placePhotos[i], {url: url}));
-    }
+    const photosWithUrls = await getPhotosWithUrls(placePhotos);
 
     place[0].memories = nonFlaggedMemories || [];
     place[0].flags = placeFlags || [];

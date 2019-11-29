@@ -5,6 +5,8 @@ const Place = sequelize.import('../../models/place.js');
 const Memory = sequelize.import('../../models/memory.js');
 const connect = require('connect-ensure-login');
 
+const getPhotosWithUrls = require('../../helpers/getPhotosWithUrls.js');
+
 
 router.all('*', connect.ensureLoggedIn(), function(req, res, next) {
   next();
@@ -24,7 +26,12 @@ router.get('/to-approve', async function(req, res) {
     INNER JOIN Places on Photos.placeId = Places.placeId
   `))[0]
   
-  res.render('admin/photos/to-approve', {photos: photos})
+  const photosWithUrls = await getPhotosWithUrls(photos);
+  
+  console.log("******")
+  console.log(photosWithUrls);
+  
+  res.render('admin/photos/to-approve', {photos: photosWithUrls})
 });
 
 module.exports = router;
