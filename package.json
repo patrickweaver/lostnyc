@@ -1,7 +1,7 @@
 {
-  "name": "svelte-v3",
-  "version": "0.0.1",
-  "description": "cybernetically enhanced web apps",
+  "name": "lostNYC",
+  "version": "1.0.0",
+  "description": "A map of lost places in NYC",
   "main": "server/server.js",
   "scripts": {
     "start": "npm run build && node server/server.js",
@@ -37,12 +37,7 @@
     "node": "10.x"
   },
   "repository": {
-    "url": "https://glitch.com/edit/#!/svelte-v3"
+    "url": "https://glitch.com/edit/#!/lostnyc"
   },
-  "license": "MIT",
-  "keywords": [
-    "svelte",
-    "html",
-    "web"
-  ]
+  "license": "MIT"
 }
