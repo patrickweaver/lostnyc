@@ -30,7 +30,25 @@ router.get('/to-approve', async function(req, res) {
   
   const photosWithUrls = await getPhotosWithUrls(photos);
   
-  res.render('admin/photos/to-approve', {
+  res.render('admin/photos/list', {
+    photos: photosWithUrls,
+    apiKey: process.env.API_KEY
+  })
+});
+
+router.get('/place/:placeId', async function(req, res) {
+  const photos = (await sequelize.query(`
+    SELECT Photos.*, Places.name as placeName,
+    Places.address as placeAddress
+    from Photos
+    INNER JOIN Places on Photos.placeId = Places.placeId
+    WHERE Photos.placeId = "${req.params.placeId}"
+  `))[0]
+  
+  const photosWithUrls = await getPhotosWithUrls(photos);
+  
+  res.render('admin/photos/list', {
+    place: photosWithUrls[0] ? photosWithUrls[0].placeName : 'No Photos for that place',
     photos: photosWithUrls,
     apiKey: process.env.API_KEY
   })

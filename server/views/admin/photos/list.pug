@@ -2,7 +2,10 @@ extends ../layout.pug
 
 block content
 
-  h2 Photos Approval Queue
+  if place
+    h2 Place: #{place}
+  else
+    h2 Photos Approval Queue
 
   ul(class="admin-list")
     each photo in photos

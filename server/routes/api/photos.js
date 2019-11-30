@@ -121,6 +121,27 @@ router.post('/highlight', async function (req, res) {
   }
 });
 
+// Unhighlight photo:
+router.post('/unhighlight', async function (req, res) {
+  
+  if (process.env.API_KEY && req.body.apiKey === process.env.API_KEY) {
+    const status = await Photo.update(
+      {highlighted: false},
+      {where: {
+        photoId: req.body.photoId
+      }}
+    );
+    
+    if (status[0] === 1) {
+      res.status(200).json({ unhighlighted: true });
+    } else {
+      res.status(400).json({unhighlighted: false, error: "No such photo"});
+    }
+  } else {
+    res.status(400).json({unhighlighted: false, error: "Invalid or missing API Key"});
+  }
+});
+
 
 // Delete photo
 router.post("/delete", async function(req, res) {

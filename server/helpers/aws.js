@@ -75,7 +75,7 @@ async function getSignedUrl(key) {
   // Using Pre Signed URL:
   
   const url = await s3.getSignedUrl('getObject', params);
-  console.log("SIGNED URL:", url, typeof url);
+  //console.log("SIGNED URL:", url, typeof url);
   return url
 }
 
