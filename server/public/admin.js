@@ -8,6 +8,11 @@ const postOptions = {
   }
 }
 
+function showPhoto(photoId) {
+  const blurredPhoto = document.getElementById('blurred-photo-' + photoId);
+  blurredPhoto.classList.remove("blurred-photo");
+}
+
 
 async function approvePhoto(photoId) {
   const url = "/api/photos/approve";

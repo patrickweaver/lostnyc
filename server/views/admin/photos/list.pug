@@ -17,9 +17,12 @@ block content
           li #{photo.placeAddress}
           li 
             h4 Photo:
-          li
+          li(class="blurred-photo" id=`blurred-photo-${photo.photoId}`)
             a(href=photo.url target="_blank")
               img(src=photo.url class="admin-photo")
+          li
+            button(onClick=`showPhoto('${photo.photoId}')`) 👀Show Non Blurred Photo
+          li
           li
             button(onClick=`approvePhoto('${photo.photoId}')`) ✅ Approve
             if photo.highlighted
