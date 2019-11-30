@@ -6,7 +6,7 @@ block content
 
   ul(class="admin-list")
     each photo in photos
-      li(class="admin-flag")
+      li(id="approve-" + photo.photoId class="admin-flag")
         ul
           li
             h4 Place:
@@ -15,4 +15,7 @@ block content
           li 
             h4 Photo:
           li
-            img(src=photo.url class="admin-photo")
+            a(href=photo.url target="_blank")
+              img(src=photo.url class="admin-photo")
+          li
+            button(onClick=`approvePhoto('${photo.photoId}')`) Approve

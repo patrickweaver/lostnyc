@@ -34,12 +34,12 @@ router.post('/dismiss', async function (req, res) {
     console.log(typeof dismissStatus[0]);
     console.log("**")
     if (dismissStatus[0] === 1) {
-      res.status(200).json({ updated: true });
+      res.status(200).json({ dismissed: true });
     } else {
-      res.status(400).json({deleted: false, error: "No such flag"});
+      res.status(400).json({dismissed: false, error: "No such flag"});
     }
   } else {
-    res.status(400).json({deleted: false, error: "Invalid or missing API Key"});
+    res.status(400).json({dismissed: false, error: "Invalid or missing API Key"});
   }
 });
 

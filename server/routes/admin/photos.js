@@ -24,14 +24,15 @@ router.get('/to-approve', async function(req, res) {
     Places.address as placeAddress
     from Photos
     INNER JOIN Places on Photos.placeId = Places.placeId
+    WHERE approved = 0;
   `))[0]
   
   const photosWithUrls = await getPhotosWithUrls(photos);
   
-  console.log("******")
-  console.log(photosWithUrls);
-  
-  res.render('admin/photos/to-approve', {photos: photosWithUrls})
+  res.render('admin/photos/to-approve', {
+    photos: photosWithUrls,
+    apiKey: process.env.API_KEY
+  })
 });
 
 module.exports = router;

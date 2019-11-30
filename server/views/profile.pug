@@ -1,10 +1,23 @@
-// User must be logged in for this to render
-// require('connect-ensure-login').ensureLoggedIn()
-// redirects if not logged in
+extends ./admin/layout.pug
 
-p
-  | User Id: #{user.userId}
-  br
-  | Username: #{user.username}
-  br
-a(href="/logout") Log out
+block content
+
+  // User must be logged in for this to render
+  // require('connect-ensure-login').ensureLoggedIn()
+  // redirects if not logged in
+
+  p
+    | User Id: #{user.userId}
+    br
+    | Username: #{user.username}
+    br
+    | Api Key: #{user.apiKey}
+    br
+  a(href="/logout") Log out
+
+
+  ul
+    li
+      a(href="/admin/photos") Photos Admin
+    li
+      a(href="/admin/flags") Flags Admin

@@ -27,7 +27,10 @@ router.get('/memory', async function(req, res) {
     INNER JOIN Memories on Flags.memoryId = Memories.memoryId
   `))[0]
   
-  res.render('admin/flags/memory', {flags: flags})
+  res.render('admin/flags/memory', {
+    flags: flags,
+    apiKey: process.env.API_KEY
+  })
 });
 
 router.get('/place', async function(req, res) {
@@ -44,7 +47,10 @@ router.get('/place', async function(req, res) {
     INNER JOIN Places on Flags.placeId = Places.placeId
   `))[0]
   
-  res.render('admin/flags/place', {flags: flags})
+  res.render('admin/flags/place', {
+    flags: flags,
+    apiKey: process.envv.API_KEY
+  })
 })
 
 module.exports = router;

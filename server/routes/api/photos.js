@@ -79,6 +79,10 @@ router.post('/new', memoryUpload, async function(req, res) {
 
 // Approve photo:
 router.post('/approve', async function (req, res) {
+  console.log("REQ>boDY");
+  console.log(req.body);
+  
+  
   if (process.env.API_KEY && req.body.apiKey === process.env.API_KEY) {
     const status = await Photo.update(
       {approved: true},
@@ -88,12 +92,12 @@ router.post('/approve', async function (req, res) {
     );
     
     if (status[0] === 1) {
-      res.status(200).json({ updated: true });
+      res.status(200).json({ approved: true });
     } else {
-      res.status(400).json({deleted: false, error: "No such photo"});
+      res.status(400).json({approved: false, error: "No such photo"});
     }
   } else {
-    res.status(400).json({deleted: false, error: "Invalid or missing API Key"});
+    res.status(400).json({approved: false, error: "Invalid or missing API Key"});
   }
 });
 
