@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     long: DataTypes.FLOAT,
     name: DataTypes.STRING,
     address: DataTypes.STRING,
-    city: DataTypes.STRING,
+    borough: DataTypes.STRING,
     state: DataTypes.STRING,
     zip: DataTypes.STRING,
     openYear: DataTypes.INTEGER,

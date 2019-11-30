@@ -67,8 +67,8 @@
     }
     
     // Fill City if left blank
-    if (!placeInput.city) {
-      placeInput.city = "DEFAULT_CITY";
+    if (!placeInput.borough) {
+      placeInput.borough = "DEFAULT_CITY";
     }
     
     // Check for other category
@@ -144,8 +144,8 @@
     <input bind:value="{placeInput.name}" on:keyup="{onNameOrAddressChange}" on:blur="{clearSearchResults}" type="text" autocomplete="off" id="place-name-field" />
     <label>Address:</label>
     <input bind:value="{placeInput.address}" on:keyup="{onNameOrAddressChange}" on:blur="{clearSearchResults}" type="text" autocomplete="off" id="place-address-field" />
-    <label>City:</label>
-    <input bind:value="{placeInput.city}" type="text" autocomplete="off" />
+    <label>Borough:</label>
+    <input bind:value="{placeInput.borough}" type="text" autocomplete="off" />
     <label>State:</label>
     <input bind:value="{placeInput.state}" type="text" autocomplete="off" />
     <label>Zip:</label>

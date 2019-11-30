@@ -43,7 +43,7 @@ router.get('/place', async function(req, res) {
     Flags.memoryId AS flagMemoryId, Flags.body AS flagBody,
     Flags.createdAt AS flagCreatedAt, Places.lat AS lat,
     Places.long AS long, Places.name AS name, Places.address AS address,
-    Places.city as city, Places.state AS state, Places.zip AS zip,
+    Places.borough as borough, Places.state AS state, Places.zip AS zip,
     Places.openYear as openYear, Places.closeDate as closeDate,
     Places.cityCouncilDistrict as cityCouncilDistrict,
     Places.createdAt as placeCreatedAt

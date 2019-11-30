@@ -96,17 +96,9 @@ router.get("/find/:placeId", async function(req, res) {
 
 // Single Place by Name or Address:
 router.get("/search", async function(req, res) {
-  console.log("QUERY:");
-  console.log(req.query)
   const nameQuery = req.query.name;
   const addressQuery = req.query.address;
   let namePlaces = []
-  
-  if (addressQuery != undefined) {
-    console.log("ADDRESS QUERY:", addressQuery, addressQuery === undefined, addressQuery == undefined, typeof addressQuery);
-  } else {
-    console.log("NO A Q:")
-  }
   
   let where = {};
   if (nameQuery) {
@@ -116,17 +108,11 @@ router.get("/search", async function(req, res) {
     where.address = {[Op.like]: `%${addressQuery}%` };
   }
   
-  console.log("WHERE");
-  console.log(where);
-  
   try {
     namePlaces = await Place.findAll({
       where: where,
       limit: 10
     })
-
-    console.log("NAME PLACES:")
-    console.log(namePlaces);
 
   } catch(err) {
     console.log('Error:\n', err);
@@ -140,10 +126,12 @@ router.get("/search", async function(req, res) {
 // New Place:
 router.post("/new", async function(req, res) {
   
+  
+  // Get Geolocation
   const geolocationOptions = {
     uri: 'https://maps.googleapis.com/maps/api/geocode/json',
     qs: {
-      address: `${req.body.address}+${req.body.city}+${req.body.state}+${req.body.zip}`,
+      address: `${req.body.address}+${req.body.borough}+${req.body.state}+${req.body.zip}`,
       key: process.env.GCP_API_KEY
     }
   }
@@ -156,6 +144,33 @@ router.post("/new", async function(req, res) {
     console.log("Error getting location.")
     console.log(err);
   }
+  
+  // Get NYC Data
+  const addressArray = req.body.address.split(/ (.+)/);
+  const houseNumber = addressArray[0];
+  const street = addressArray[1];
+  
+  const nycDataOptions = {
+    uri: 'https://api.cityofnewyork.us/geoclient/v1/address.json',
+    qs: {
+      houseNumber: houseNumber,
+      street: street,
+      borough: req.body.borough,
+      app_id: process.env.NYC_DEV_APP_ID,
+      app_key: process.env.NYC_DEV_APP_KEY
+    }
+  }
+  
+  let cityCouncilDistrict;
+  
+  try {
+    const nycDataResponse = JSON.parse(await rp(nycDataOptions));
+    cityCouncilDistrict = nycDataResponse.address.cityCouncilDistrict;
+  } catch (err) {
+    console.log("Error getting nyc data")
+    console.log(err);
+  }
+  
   
   let place;
   try {
@@ -177,12 +192,12 @@ router.post("/new", async function(req, res) {
       long: parseFloat(locationLong),
       name: req.body.name,
       address: req.body.address,
-      city: req.body.city,
+      borough: req.body.borough,
       state: req.body.state,
       zip: req.body.zip,
       openYear: req.body.openYear,
       closeDate: new Date(req.body.closeDate),
-      cityCouncilDistrict: req.body.cityCouncilDistrict,
+      cityCouncilDistrict: cityCouncilDistrict,
       category: req.body.category
     }
   } catch (err) {
@@ -198,7 +213,7 @@ router.post("/new", async function(req, res) {
 
     
     if (
-      checkLanguage([savedPlace.name, savedPlace.address, savedPlace.city, savedPlace.state, savedPlace.zip, savedPlace.yearOpened, savedPlace.category])
+      checkLanguage([savedPlace.name, savedPlace.address, savedPlace.borough, savedPlace.state, savedPlace.zip, savedPlace.yearOpened, savedPlace.category])
       || flagForDefaultLocation
     ) {
       
@@ -210,7 +225,7 @@ router.post("/new", async function(req, res) {
       }
       
       const newFlag = await Flag.create({
-        body: `** ${flagReason}: ${savedPlace.name} - ${savedPlace.address} - ${savedPlace.city} - ${savedPlace.state} - ${savedPlace.zip} - ${savedPlace.yearOpened}`,
+        body: `** ${flagReason}: ${savedPlace.name} - ${savedPlace.address} - ${savedPlace.borough} - ${savedPlace.state} - ${savedPlace.zip} - ${savedPlace.yearOpened}`,
         placeId: savedPlace.placeId
       })
       savedPlace.flags = [newFlag.get()];

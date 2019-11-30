@@ -47,8 +47,13 @@
   </h4>
   <p class="address">
     {place.address}<br />
-    {place.city}
+    {place.borough}
   </p>
+  {#if place.cityCouncilDistrict}
+  <p>
+    City Council District {place.cityCouncilDistrict}
+  </p>
+  {/if}
 </div>
 {#if highlightedPhoto}
     <img src="{highlightedPhoto}" class="highlighted-photo" alt="A photo of {place.name}" />
