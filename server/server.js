@@ -124,6 +124,24 @@ function findUserByUserId(userId, cb) {
 /* Routes: */
 /* - - - - - - - - - - - - */
 
+
+// Limit request hosts:
+app.use('*', function(req, res, next) {
+  var host = req.get('host');
+  
+  if (process.env.API_ACCEPT_FROM){
+    const apiAcceptFrom = process.env.API_ACCEPT_FROM.split(',').map(i => i.trim());
+    if (apiAcceptFrom.indexOf(host) != -1) {
+      next();
+    } else {
+      console.log("Invalid request domain: " + host);
+    }
+  } else {
+    next();
+  }
+})
+
+
 const memories = require('./routes/api/memories.js');
 app.use('/api/memories', memories);
 const places = require('./routes/api/places.js');
