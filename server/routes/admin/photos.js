@@ -24,7 +24,8 @@ router.get('/to-approve', async function(req, res) {
     Places.address as placeAddress
     from Photos
     INNER JOIN Places on Photos.placeId = Places.placeId
-    WHERE approved = 0;
+    WHERE approved = 0
+    LIMIT 10
   `))[0]
   
   const photosWithUrls = await getPhotosWithUrls(photos);

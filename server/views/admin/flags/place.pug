@@ -6,22 +6,26 @@ block content
 
   ul(class="admin-list")
     each flag in flags
-      li(class="admin-flag")
+      li(id="review-" + flag.flagId class="admin-flag")
         ul
           li
             h4 Flag:
           li Flag Id: #{flag.flagId}
-          li Memory Id: #{flag.memoryId}
+          li Status: #{flag.dismissed}
+          li Memory Id:&nbsp;
+            strong(class="highlight") #{flag.flagMemoryId}
           li Flag Place Id: #{flag.placeId}
           li Flag Timestamp: #{flag.flagCreatedAt}
           li Flag Body:
-            p= flag.flagBody
+            p(class="flag-reason")= flag.flagBody
           li 
             h4 Place:
           li Lat #{flag.lat}
           li Long: #{flag.long}
-          li Name: #{flag.name}
-          li Address: #{flag.address}
+          li
+            strong Name: #{flag.name}
+          li
+            strong Address: #{flag.address}
           li City: #{flag.city}
           li State: #{flag.state}
           li Zip: #{flag.zip}
@@ -29,3 +33,7 @@ block content
           li Close Date: #{flag.closeDate}
           li Council District: #{flag.cityCouncilDistrict}
           li Place Timestamp: #{flag.placeCreatedAt}
+          li
+            button(onClick=`dismissFlag('${flag.flagId}')`) ✅ Dismiss
+            span(class="spacer") &nbsp;
+            button(onClick=`deletePlace('${flag.placeId}', '${flag.flagId}')`) ⛔️ Delete PLACE

@@ -6,7 +6,7 @@ block content
 
   ul(class="admin-list")
     each photo in photos
-      li(id="approve-" + photo.photoId class="admin-flag")
+      li(id="review-" + photo.photoId class="admin-flag")
         ul
           li
             h4 Place:
@@ -18,4 +18,6 @@ block content
             a(href=photo.url target="_blank")
               img(src=photo.url class="admin-photo")
           li
-            button(onClick=`approvePhoto('${photo.photoId}')`) Approve
+            button(onClick=`approvePhoto('${photo.photoId}')`) ✅ Approve
+            span(class="spacer") &nbsp;
+            button(onClick=`deletePhoto('${photo.photoId}')`) ⛔️ Delete

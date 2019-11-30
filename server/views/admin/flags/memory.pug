@@ -6,11 +6,12 @@ block content
 
   ul(class="admin-list")
     each flag in flags
-      li(class="admin-flag")
+      li(id="review-" + flag.flagId class="admin-flag")
         ul
           li
             h4 Flag:
           li Flag Id: #{flag.flagId}
+          li Status: #{flag.dismissed}
           li Memory Id: #{flag.memoryId}
           li Flag Place Id: #{flag.flagPlaceId}
           li Flag Timestamp: #{flag.flagCreatedAt}
@@ -23,3 +24,7 @@ block content
           li Memory Author: #{flag.memoryAuthor}
           li Memory Body:
             p= flag.memoryBody
+          li
+            button(onClick=`dismissFlag('${flag.flagId}')`) ✅ Dismiss
+            span(class="spacer") &nbsp;
+            button(onClick=`deleteMemory('${flag.memoryId}', '${flag.flagId}')`) ⛔️ Delete MEMORY

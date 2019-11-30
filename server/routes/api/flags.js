@@ -29,10 +29,6 @@ router.post('/dismiss', async function (req, res) {
       }}
     );
     
-    console.log("**")
-    console.log(dismissStatus[0]);
-    console.log(typeof dismissStatus[0]);
-    console.log("**")
     if (dismissStatus[0] === 1) {
       res.status(200).json({ dismissed: true });
     } else {

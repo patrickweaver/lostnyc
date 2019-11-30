@@ -2,11 +2,17 @@ h1, h2, h3, h4 {
   margin: 5px 0;
 }
 
+button {
+  cursor: pointer;
+}
+
+button:hover {
+  border: 1px solid blue;
+}
+
 .admin-list {
   list-style-type: none;
 }
-
-
 
 .admin-flag {
   padding: 10px 0;
@@ -18,4 +24,22 @@ h1, h2, h3, h4 {
 .admin-photo {
   width: 200px;
   height: auto;
+}
+
+.spacer {
+  margin: 0 40px;
+}
+
+.flag-reason {
+  border: 1px solid red;
+  padding: 5px;
+  background-color: white;
+  margin: 0 10px 0 0;
+}
+
+.highlight {
+  border: 1px solid yellow;
+  padding: 1px;
+  background-color: #DDD;
+  margin: 0 10px 0 0;
 }
