@@ -1,0 +1,82 @@
+<script>
+  import Button from "../Button.html";
+  import Spinner from "../Spinner.html";
+  import fetchOptions from "../../helpers/fetchOptions.js";
+
+  export let closeForm;
+  let warning;
+  let spinner = false;
+  
+  import { places, selectedPlace, message, modalItem } from "../../stores.js";
+  import shortBody from "../../helpers/shortBody.js";
+  
+  var memoryInput = {placeId: $selectedPlace.placeId};
+
+  async function submitForm(event) {
+    event.target.blur();
+    spinner = true;
+    if (!memoryInput.body) {
+      warning = "Please write your memory below."
+      return;
+    }
+    const url = "/api/memories/new";
+    const options = Object.assign(
+      { body: JSON.stringify(memoryInput) },
+      fetchOptions.post
+    );
+    var response = await fetch(url, options);
+    const responseJson = await response.json();
+    addMemoryToPlace(responseJson);
+    
+    if (responseJson.flags) {
+      message.update(n => `
+        <h2>Thank you for submitting this memory</h2>
+        <p>Your submission has been flagged for containing inappropriate content. It will be reviewed and posted if it follows our <a href="/terms-of-use" target="_blank">terms of use.</a></p>
+      `)
+      modalItem.update(n => 'message');
+    } else {
+      // Back to place
+      modalItem.update(n => 'selectedPlace');
+    }
+  }
+  
+  function addMemoryToPlace(memory) {
+    const memoryWithShortBody = shortBody(memory);
+    selectedPlace.update(n => {
+      if (!n.memories) {
+        n.memories = [];
+      }
+      n.memories.unshift(memoryWithShortBody);
+      return n;
+    });
+  }
+  
+  
+</script>
+
+<div id="new-memory-form" class="form">
+  {#if spinner}
+  <Spinner />
+  {/if}
+  <h3>
+    New Memory of {$selectedPlace.name}
+  </h3>
+  {#if warning}
+  <p class="warning">
+    {warning}
+  </p>
+  {/if}
+  <form>
+    <textarea bind:value={memoryInput.body} placeholder="What do you remember about {$selectedPlace.name}"></textarea>
+    <label>Author: (Optional)</label>
+    <input bind:value={memoryInput.author} type="text" autocomplete="off" />
+    <Button label={'Save'} type={'create'} onClick={submitForm} />
+    <Button label={'Cancel'} type={'cancel'} onClick={closeForm} />
+  </form>
+</div>
+
+<style>
+  #new-memory-form {
+    position: relative;
+  }
+</style>

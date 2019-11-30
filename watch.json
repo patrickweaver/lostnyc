@@ -1,0 +1,23 @@
+{
+  "install": {
+    "include": [
+      "^package\\.json$",
+      "^\\.env$"
+    ]
+  },
+  "restart": {
+    "exclude": [
+      "^public/"
+    ],
+    "include": [
+      "^public\/index.html",
+      "^public\/global.css",
+      "^src\/.*.js$",
+      "^src\/.*.html",
+      "^src\/.*.svelte",
+      "\\.js$",
+      "\\.json"
+    ]
+  },
+  "throttle": 500
+}

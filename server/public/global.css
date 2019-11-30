@@ -1,0 +1,105 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Ariel', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 10px 0;
+}
+
+a {
+  cursor: pointer;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+#map {
+  height: 100vh;
+  flex: 0 0 60%;
+  z-index: 1;
+  cursor: default;
+}
+
+.debug {
+  background-color: pink;
+  color: purple;
+  z-index: 100;
+  border: 3px solid green;
+  padding: 10px;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  max-width: 70vw;
+  display: none;
+}
+
+.warning {
+  color: red;
+}
+
+label, input, textarea, select {
+  display: block;
+  font-size: 18px;
+  line-height: 22px;
+  width: 100%;
+  margin: 3px 0;
+}
+
+textarea {
+  min-height: 6em;
+  border: 1px solid #444;
+}
+
+.close-modal {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px 15px 5px 5px;
+  cursor: pointer;
+}
+
+.text-button {
+  border: none;
+  background-color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.memory-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.memory {
+  background-color: white;
+  padding: 5px 10px;
+  border: 1px solid #777;
+  border-radius: 5px;
+  margin: 5px 0 10px;
+}
+
+.memory p {
+  margin-top: .125em;
+  margin-bottom: .5em;
+}
+
+@media(max-width: 600px) {
+  .memory p {
+    margin-top: 0;
+  }
+  
+  
+}
+
+@media(max-width: 350px) {
+
+}
+  

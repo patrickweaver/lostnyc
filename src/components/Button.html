@@ -1,0 +1,54 @@
+<script>
+  export let label;
+  export let type;
+  export let onClick;
+  export let onChange;
+</script>
+
+{#if type === 'file'}
+<label for="photo-picker" class="file-picker-label {type}">{label}</label>
+<input id="photo-picker" type="file" on:change="{onChange}" />
+{:else}
+<button class="button {type}" on:click|preventDefault="{onClick}">{label}</button>
+{/if}
+
+
+
+<style>
+  .button, .file-picker-label {
+    border: 2px solid black;
+    padding: 5px;
+    margin: 10px 0;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 3px;
+    display: inline-block;
+    width: max-content;
+  }
+  
+  #photo-picker {
+    display: none;
+  }
+  
+  .file-pikcer-label {
+    display: inline-block;
+  }
+  
+  .create, .file {
+    background-color: #fe3d89;
+  }
+  
+  .create:hover, .file:hover {
+    background-color: #d93476;
+  }
+  
+  .cancel {
+    background-color: #dfdfdf;
+  }
+  
+  .cancel:hover {
+    background-color: #efefef;
+  }
+  
+  
+</style>

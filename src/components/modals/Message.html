@@ -1,0 +1,24 @@
+<script>
+  import { message } from "../../stores.js";
+  export let returnToMap;
+</script>
+
+<button class="text-button close-modal" on:click="{returnToMap}">
+  Back to Map
+</button>
+
+<div>
+  <div id="message-body">
+    {@html $message}
+  </div>
+
+  <button class="text-button" on:click="{returnToMap}">
+    Done
+  </button>
+</div>
+
+<style>
+  #message-body {
+    margin-top: 30px;
+  }
+</style>

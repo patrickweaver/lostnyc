@@ -1,0 +1,37 @@
+<script>
+  import PlaceDetails from "../PlaceDetails.html"
+  
+  import { modalItem, selectedMemory, selectedPlace } from "../../stores.js";
+  
+  export let memoryTimestamp;
+  
+  function returnToPlace() {
+    modalItem.upate(n => 'selectedPlace');
+  }
+  
+  function closeModal() {
+    modalItem.update(n => 'selectedPlace');
+    selectedMemory.update(n => null);   
+  }
+  
+  window.location.hash = 'memories/' + $selectedMemory.memoryId;
+
+</script>
+
+<button class="text-button close-modal" on:click={closeModal}>
+  Back to Place
+</button>
+
+<PlaceDetails place={$selectedPlace} />
+
+<div id="memory" class="memory">
+  <p>{$selectedMemory.body}</p>
+   - {#if $selectedMemory.author}{$selectedMemory.author}{:else}Anonymous{/if} {memoryTimestamp($selectedMemory)}
+</div>
+
+
+<style>
+  #memory{
+    margin-top: 10px;
+  }
+</style>

@@ -1,0 +1,251 @@
+<script>
+  import { beforeUpdate } from "svelte";
+  import Button from "./components/Button.html";
+  import ModalContainer from "./components/ModalContainer.html";
+
+  import { places, selectedMemory, selectedPlace, message, modalItem } from "./stores.js";
+  
+  import api from "./helpers/api.js";
+  import circleProps from "./helpers/circleProps.js";
+  import messages from "./helpers/messages.js";
+  
+  var map;
+  
+  // Go to Place or Memory from URL Hash
+  function checkHash() {
+    if(window.location.hash) {
+      (async function() {
+        const wHash = window.location.hash.substr(1, window.location.hash.length).split('/');
+        const hashType = wHash[0];
+        const hashId = wHash[1];
+
+        if (hashType === 'places') {
+          if (
+            !$selectedPlace
+            || hashId != $selectedPlace.placeId
+            || $selectedMemory != null
+          ){
+            //const place = await api.getPlace(hashId);
+            //selectedPlace.update(n => place);
+            selectedPlace.update(n => {return {placeId: hashId, sync: true}});
+            modalItem.update(n => 'selectedPlace');
+          }
+        } else if (hashType === 'memories') {
+          if (!$selectedMemory || hashId != $selectedMemory.memoryId) {
+            const memoryPlace = await api.getMemoryPlace(hashId);
+            if (memoryPlace.error) {
+              return;
+            }
+            selectedPlace.update(n => memoryPlace);
+            selectedMemory.update(n => memoryPlace.memories[0]);
+            modalItem.update(n => 'memory');
+          }
+        }
+      })();
+    } else {
+      returnToMap();
+    }
+  }
+
+  function drawMap() {
+    map = L.map("map")
+      .setView(MAP_CENTER, MAP_ZOOM)
+      .on("click", onMapClick);
+    map.zoomControl.setPosition('bottomleft');
+    L.tileLayer("TILE_LAYER", {
+      attribution: '<a href="/map-attribution" target="_blank">Map Attribution</a>',
+      maxZoom: 18
+    }).addTo(map);
+  }
+
+  function drawPlace(place, recenter) {
+    //console.log(place);
+    if (!place.lat || !place.long) {
+      return;
+    }
+    var circle = L.circle([place.lat, place.long], circleProps(place))
+      .addTo(map)
+      .on("click", onMarkerClick);
+    if (recenter) {
+      recenterOnPlace(place);
+    }
+  }
+  
+  function recenterOnPlace(place) {
+    if (place.lat && place.long) {
+      map.panTo(new L.LatLng(place.lat, place.long));
+    }
+  }
+  
+  function returnToMap() {
+    window.location.hash = '';
+    // Clear message:
+    message.update(n => null);
+    // Clear modal:
+    selectedPlace.update(n => null);
+    modalItem.update(n => null);
+  }
+
+  function onMapClick(e) {
+    returnToMap();
+  }
+
+  function onMarkerClick(e) {
+    // Stop map click event from firing also
+    // This is a dumb way to do this but
+    // there doesn't seem to be a better way?
+    map.off("click", onMapClick);
+    setTimeout(function() {
+      map.on("click", onMapClick);
+    }, 50);
+    modalItem.update(n => 'selectedPlace');
+    
+    let placeStub = $places[$places.map(i => i.placeId).indexOf(e.target.options.placeId)]
+    placeStub.sync = true;
+    selectedPlace.update(n => placeStub);
+  }
+
+  function onNewPlaceButtonClick(event) {
+    event.target.blur();
+    modalItem.update(n => "newPlace");
+    selectedPlace.update(n => null)
+  }
+  
+  function onAboutButtonClick(event) {
+    event.target.blur();
+    modalItem.update(n => "message");
+    message.update(n => messages.about);
+  }
+  
+  function checkShowAbout() {
+    let aboutDismissed = false;
+    const cookies = document.cookie.split('; ').map(i => i.split('='));
+    for (var i in cookies) {
+      if (cookies[i][0] === 'lostNYCAboutDismissed') {
+        if (cookies[i][1] === 'true'){
+          aboutDismissed = true;
+        }
+        break;
+      }
+    }
+    
+    if (!aboutDismissed) {
+      message.update(n => messages.about);
+      modalItem.update(n => 'message');
+      document.cookie = 'lostNYCAboutDismissed=true';
+    }
+  }
+
+  (async function main() {
+    
+    checkHash();
+    window.addEventListener("hashchange", function(e) {
+      checkHash();
+    })
+    if (!window.location.hash){        
+      // Show About message on first view
+      checkShowAbout()
+    }
+    
+
+
+    // Draw the map
+    drawMap();
+    // Get the places JSON from the api
+    const placesApiResponse = await api.getPlaces();
+    places.update(n => placesApiResponse);
+    // Draw all the places
+    for (var i in $places) {
+      drawPlace($places[i], false);
+    }
+    
+  })();
+</script>
+
+<div id="title-container-container">
+  <div id="title-container">
+    <h2>
+      Lost NYC
+    </h2>
+    <h4>
+      Presented by the <a class="nycartc" href="http://nycartc.com/" target="_blank">NYC Artist Coalition</a>
+    </h4>
+  </div>
+  <ul id="app-buttons">
+    <li id="new-place-button"><Button label={'New Place'} type={'create'} onClick={onNewPlaceButtonClick} /></li>
+    <li id="about-button"><Button label={'About'} type={'cancel'} onClick={onAboutButtonClick} /></li>
+  </ul>
+</div>
+
+<ModalContainer
+  drawPlace={drawPlace}
+  returnToMap={returnToMap}
+  recenterOnPlace={recenterOnPlace}
+/>
+
+<div class="debug">
+  <h3>
+    {$modalItem}
+  </h3>
+  <p>
+    {JSON.stringify($selectedPlace)}
+  </p>
+</div>
+
+<style>
+  
+  #title-container-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: grid;
+    grid-template-rows: 100px 65px;
+  }
+  
+  #title-container {
+    background: rgba(240, 240, 240, .94);
+    border: 1px solid black;
+    border-radius: 5px;
+    z-index: 5;
+    text-align: center;
+    margin: 10px auto;
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    flex-basis: 100%;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+
+  #app-buttons {
+    z-index: 2;
+    position: absolute;
+    bottom: 20px;
+    right: 5px;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    text-align: center;
+    grid-row-start: 2;
+    grid-row-start: 3;
+  }
+  
+  #app-buttons li {
+    display: inline-block;
+  }
+  
+  .nycartc {
+    color: #fe3d89;
+    text-decoration: none;
+  }
+  
+  @media(max-width: 350px) {
+    #title-container-container {
+      grid-template-rows: 120px 65px;
+    }
+  }
+  
+  
+</style>

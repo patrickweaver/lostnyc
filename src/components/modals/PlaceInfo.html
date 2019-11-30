@@ -1,0 +1,138 @@
+<script>
+  import { beforeUpdate, afterUpdate } from "svelte";
+  import { modalItem, selectedPlace, selectedMemory } from "../../stores.js";
+
+  import Button from "../Button.html";
+  import PlaceDetails from "../PlaceDetails.html"
+  import PhotoSet from "../PhotoSet.html";
+  import Spinner from "../Spinner.html";
+  
+  import shortBody from "../../helpers/shortBody.js";
+  import api from "../../helpers/api.js";
+  import fetchOptions from "../../helpers/fetchOptions.js";
+
+  export let closeModal;
+  export let memoryTimestamp;
+  export let recenterOnPlace;
+  let update = true;
+  let photo;
+  let spinner = false;
+
+  beforeUpdate(async () => {
+
+    // Get place details:
+    if ($selectedPlace.sync) {
+      const placeWithMemories = await api.getPlace($selectedPlace.placeId)
+
+      if (!placeWithMemories.error) {
+        placeWithMemories.memories.map(i => shortBody(i));
+        selectedPlace.update(n => placeWithMemories);
+      } else {
+        console.log("ERROR")
+        console.log(placeWithMemories.error);
+      }
+    }
+    // Set URL:
+    window.location.hash = 'places/' + $selectedPlace.placeId;
+  });
+  
+  afterUpdate(() => {
+    recenterOnPlace($selectedPlace);
+  });
+  
+
+  function onNewMemoryButtonClick() {
+    modalItem.update(n => "newMemory");
+    // Don't reset selectedPlace here
+  }
+  
+  async function onNewPhotoInputChange(event) {
+    spinner = true;
+    photo = event.target.files[0];
+    
+    var formData = new FormData();
+    formData.append('placeId', $selectedPlace.placeId);
+    formData.append('file', photo);
+    formData.append('async', true);
+    
+    const url = "/api/photos/new";
+    const options = Object.assign(
+      { body: formData },
+      fetchOptions.postFiles
+    );
+    var response = await fetch(url, options);
+    const responseJson = await response.json();
+    spinner = false;
+    addPhotoToPlace(responseJson);
+  }
+  
+  function addPhotoToPlace(photo) {
+    selectedPlace.update(n => {
+      if (!n.photos) {
+        n.photos = [];
+      }
+      n.photos.unshift(photo);
+      return n;
+    });
+  }
+
+  function seeFullMemory(index) {
+    selectedMemory.update(n => $selectedPlace.memories[index]);
+    modalItem.update(n => "memory");
+  }
+  
+  
+</script>
+
+<button class="text-button close-modal" on:click={closeModal}>
+  Close
+</button>
+
+<div id="place-info">
+  {#if spinner}
+  <Spinner />
+  {/if}
+  
+  <PlaceDetails place={$selectedPlace} />
+
+  <div id="place-buttons">
+    <Button label={'Add Memory'} type={'create'} onClick={onNewMemoryButtonClick} />
+    <Button label={'Add Photo'} type={'file'} onChange={onNewPhotoInputChange} />
+  </div>
+  
+  {#if $selectedPlace.memories}
+  <ul class="memory-list">
+    {#each $selectedPlace.memories as memory, index}
+    <li class="memory">
+      <p>{memory.shortBody}
+        <a href="/#memories/{memory.memoryId}" class="text-button" on:click="{() => seeFullMemory(index)}">
+          {#if memory.body.length > 240}
+            Read More
+          {:else}
+            <span class="memoryLink">🔗</span>
+          {/if}
+        </a>
+      </p>
+      <p>
+        - {#if memory.author}{memory.author}{:else}Anonymous{/if} {memoryTimestamp(memory)}
+      </p>
+    </li>
+    {/each}
+  </ul>
+  {/if}
+  
+  {#if $selectedPlace.photos}
+    <PhotoSet photos={$selectedPlace.photos} />
+  {/if}
+  
+</div>
+
+<style>
+  #place-info {
+    position: relative;
+  }
+  
+  #place-buttons {
+    width: 100%;
+  }
+</style>

@@ -1,0 +1,40 @@
+extends ../layout.pug
+
+block content
+
+  if place
+    h2 Place: #{place}
+  else
+    h2 Photos Approval Queue
+
+  ul(class="admin-list")
+    each photo in photos
+      li(id="review-" + photo.photoId class=`admin-flag ${photo.highlighted ? 'highlighted' : 'not-highlighted'}`)
+        ul
+          li
+            h4 Place:
+          li #{photo.placeName}
+          li #{photo.placeAddress}
+          li 
+            h4 Photo:
+          li(class="blurred-photo" id=`blurred-photo-${photo.photoId}`)
+            a(href=photo.url target="_blank")
+              img(src=photo.url class="admin-photo")
+          li
+            button(onClick=`showPhoto('${photo.photoId}')`) 👀Show Non Blurred Photo
+          li
+          li
+            button(onClick=`approvePhoto('${photo.photoId}')`) ✅ Approve
+            if photo.highlighted
+              button(onClick=`unhighlightPhoto('${photo.photoId}')`) ⤵️ Unhighlight
+            else
+              button(onClick=`highlightPhoto('${photo.photoId}')`) 🖼 Highlight
+            span(class="spacer") &nbsp;
+            button(onClick=`deletePhoto('${photo.photoId}')`) ⛔️ Delete
+
+  if page
+    p
+        if page != 1
+          a(href=`${route}?page=${parseInt(page) - 1}`) <- Page #{parseInt(page) - 1}
+        | &nbsp;&#124;&nbsp;Page #{page}&nbsp;&#124;&nbsp;
+        a(href=`${route}?page=${parseInt(page) + 1}`) -> Page #{parseInt(page) + 1}

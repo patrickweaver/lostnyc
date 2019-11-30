@@ -1,0 +1,127 @@
+<script>
+  import { modalItem, selectedPlace } from '../stores.js';
+  import fetchOptions from "../helpers/fetchOptions.js";
+  import months from "../helpers/months.js";
+  
+  // subcomponents
+  import Memory from './modals/Memory.html';
+  import NewFlag from './modals/NewFlag.html';
+  import NewMemoryForm from './modals/NewMemory.html';
+  import Message from './modals/Message.html';
+  import NewPlaceForm from './modals/NewPlace.html';
+  import Photo from './modals/Photo.html';
+  import PlaceInfo from './modals/PlaceInfo.html';
+  
+  export let drawPlace;
+  export let returnToMap;
+  export let recenterOnPlace;
+  
+  const displayPlaceInfo = '';
+  
+  function closeForm() {
+    if ($selectedPlace && $selectedPlace.name) {
+      modalItem.update(n => 'selectedPlace');
+    } else {
+      returnToMap()
+    }
+  }
+  
+  function flagItem(type) {
+    modalItem.update(n => type)
+  }
+  
+  function memoryTimestamp(memory) {
+    const date = new Date(memory.createdAt)
+    const currentYear = (new Date()).getFullYear();
+    const year = currentYear === date.getFullYear() ? '' : `, ${date.getFullYear()}`;
+    return `on ${months[date.getMonth()]} ${date.getDate()}${year}`;
+  }
+  
+</script>
+
+{#if $modalItem}
+  <div id="modal-container">
+    
+    {#if $modalItem === 'newPlace'}
+      <NewPlaceForm
+        closeForm={closeForm}
+        drawPlace={drawPlace}
+      />
+    {:else if $modalItem === 'newMemory'}
+      <NewMemoryForm
+        closeForm={closeForm}
+      />
+    {:else if $modalItem === 'memory'}
+      <Memory
+        memoryTimestamp={memoryTimestamp}
+      />
+    {:else if $modalItem === 'placeFlag' || $modalItem === 'memoryFlag'}
+      <NewFlag
+        closeForm={closeForm}
+      />
+    {:else if $modalItem === 'message'}
+      <Message returnToMap={returnToMap} />
+    
+    {:else if $modalItem === 'photo'}
+      <Photo />
+    
+    {:else if $modalItem === 'selectedPlace' && $selectedPlace}
+      <PlaceInfo
+        closeModal={returnToMap}
+        memoryTimestamp={memoryTimestamp}
+        recenterOnPlace={recenterOnPlace}
+      />
+    {/if}
+  
+    {#if $modalItem === 'selectedPlace' && $selectedPlace}
+      <button class="flag-button text-button" on:click="{() => flagItem('placeFlag')}">
+        Click here to flag if this place is wrong or inappropriate.
+      </button>
+    {:else if $modalItem === 'memory'}
+      <button class="flag-button text-button" on:click="{() => flagItem('memoryFlag')}">
+        Click here to flag if this memory is inappropriate or on the incorrect place.
+      </button>
+    {/if}
+  </div>
+{/if}
+
+<style>
+  
+  #modal-container {
+    z-index: 100;
+    position: fixed;
+    top: 0px;
+    left: 0;
+    right: 0;
+    background-color: #eee;
+    border: 2px solid black;
+    padding: 10px 20px;
+    margin: 20px auto;
+    width: Calc(100vw - 40px);
+    max-height: Calc(100vh - 140px);
+    max-width: 600px;
+    min-height: 400px;
+    overflow: scroll;
+    border-radius: 3px;
+  }
+  
+  .flag-button {
+    margin: 20px 5px 5px;
+    text-align: left;
+  }
+  
+  @media(max-width: 600px) {
+    #modal-container {
+      margin: 35px 20px 120px;
+      padding: 10px;
+    }
+  }
+  
+  @media(max-width: 350px) {
+    #modal-container {
+      max-height: Calc(100vh - 50px);
+      
+    }
+  }
+  
+</style>

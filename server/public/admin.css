@@ -1,0 +1,53 @@
+h1, h2, h3, h4 {
+  margin: 5px 0;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:hover {
+  border: 1px solid blue;
+}
+
+.admin-list {
+  list-style-type: none;
+}
+
+.admin-flag {
+  padding: 10px 0;
+  background-color: #F3B3E5;
+  border: 2px solid: #9563B2;
+  margin: 20px 0;
+}
+
+.admin-photo {
+  width: 200px;
+  height: auto;
+}
+
+.spacer {
+  margin: 0 40px;
+}
+
+.flag-reason {
+  border: 1px solid red;
+  padding: 5px;
+  background-color: white;
+  margin: 0 10px 0 0;
+}
+
+.stand-out {
+  border: 1px solid yellow;
+  padding: 1px;
+  background-color: #DDD;
+  margin: 0 10px 0 0;
+}
+
+.highlighted {
+  border: 3px solid blue;
+}
+
+.blurred-photo img {
+  filter: blur(10px);
+}
