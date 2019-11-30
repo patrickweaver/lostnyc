@@ -19,20 +19,26 @@ router.get('/', function(req, res) {
 });
 
 router.get('/to-approve', async function(req, res) {
+  const offset = (req.query.page - 1) * 10 || 0;
+  
   const photos = (await sequelize.query(`
     SELECT Photos.*, Places.name as placeName,
     Places.address as placeAddress
     from Photos
     INNER JOIN Places on Photos.placeId = Places.placeId
     WHERE approved = 0
+    ORDER BY Photos.createdAt DESC
     LIMIT 10
+    OFFSET ${offset}
   `))[0]
   
   const photosWithUrls = await getPhotosWithUrls(photos);
   
   res.render('admin/photos/list', {
     photos: photosWithUrls,
-    apiKey: process.env.API_KEY
+    apiKey: process.env.API_KEY,
+    page: req.query.page || 1,
+    route: 'to-approve'
   })
 });
 

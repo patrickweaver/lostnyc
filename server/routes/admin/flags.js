@@ -17,6 +17,7 @@ router.get('/', function(req, res) {
 });
 
 router.get('/memory', async function(req, res) {
+  const offset = (req.query.page - 1) * 10 || 0;
   const flags = (await sequelize.query(`
     SELECT Flags.flagId AS flagId, 
     Flags.dismissed as dismissed, Flags.memoryId AS memoryId,
@@ -27,16 +28,20 @@ router.get('/memory', async function(req, res) {
     from Flags
     INNER JOIN Memories on Flags.memoryId = Memories.memoryId
     WHERE dismissed = 0
+    ORDER BY Flags.createdAt DESC
     LIMIT 10
+    OFFSET ${offset}
   `))[0]
   
   res.render('admin/flags/memory', {
     flags: flags,
-    apiKey: process.env.API_KEY
+    apiKey: process.env.API_KEY,
+    page: req.query.page || 1
   })
 });
 
 router.get('/place', async function(req, res) {
+  const offset = (req.query.page - 1) * 10 || 0;
   const flags = (await sequelize.query(`
     SELECT Flags.flagId AS flagId,
     Flags.dismissed as dismissed, Flags.placeId AS placeId,
@@ -50,12 +55,15 @@ router.get('/place', async function(req, res) {
     from Flags
     INNER JOIN Places on Flags.placeId = Places.placeId
     WHERE dismissed = 0
+    ORDER BY Flags.createdAt DESC
     LIMIT 10
+    OFFSET ${offset}
   `))[0]
   
   res.render('admin/flags/place', {
     flags: flags,
-    apiKey: process.env.API_KEY
+    apiKey: process.env.API_KEY,
+    page: req.query.page || 1
   })
 })
 

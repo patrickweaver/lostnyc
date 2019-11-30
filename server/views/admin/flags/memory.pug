@@ -28,3 +28,9 @@ block content
             button(onClick=`dismissFlag('${flag.flagId}')`) ✅ Dismiss
             span(class="spacer") &nbsp;
             button(onClick=`deleteMemory('${flag.memoryId}', '${flag.flagId}')`) ⛔️ Delete MEMORY
+            
+  p
+    if page != 1
+      a(href=`memory?page=${parseInt(page) - 1}`) <- Page #{parseInt(page) - 1}
+    | &nbsp;&#124;&nbsp;Page #{page}&nbsp;&#124;&nbsp;
+    a(href=`memory?page=${parseInt(page) + 1}`) -> Page #{parseInt(page) + 1}

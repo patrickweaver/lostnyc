@@ -4,7 +4,8 @@ html
     title Lost NYC - Admin
     link(rel='stylesheet', href='/admin.css')
   body
-    h1 Lost NYC Admin
+    h1
+      a(href='/auth/profile') Lost NYC Admin
     block content
     include ./apiKey.pug
     script(src="/admin.js")
