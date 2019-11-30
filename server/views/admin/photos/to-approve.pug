@@ -6,7 +6,7 @@ block content
 
   ul(class="admin-list")
     each photo in photos
-      li(id="review-" + photo.photoId class="admin-flag")
+      li(id="review-" + photo.photoId class=`admin-flag ${photo.highlighted ? 'highlighted' : 'not-highlighted'}`)
         ul
           li
             h4 Place:
@@ -19,5 +19,9 @@ block content
               img(src=photo.url class="admin-photo")
           li
             button(onClick=`approvePhoto('${photo.photoId}')`) ✅ Approve
+            if photo.highlighted
+              button(onClick=`unhighlightPhoto('${photo.photoId}')`) ⤵️ Unhighlight
+            else
+              button(onClick=`highlightPhoto('${photo.photoId}')`) 🖼 Highlight
             span(class="spacer") &nbsp;
             button(onClick=`deletePhoto('${photo.photoId}')`) ⛔️ Delete

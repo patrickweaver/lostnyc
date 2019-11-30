@@ -37,9 +37,13 @@ button:hover {
   margin: 0 10px 0 0;
 }
 
-.highlight {
+.stand-out {
   border: 1px solid yellow;
   padding: 1px;
   background-color: #DDD;
   margin: 0 10px 0 0;
+}
+
+.highlighted {
+  border: 3px solid blue;
 }

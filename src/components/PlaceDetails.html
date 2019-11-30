@@ -1,41 +1,81 @@
 <script>
   
-  export let place
-  let closeYear
+  import { afterUpdate } from "svelte";
+  
+  export let place;
+  let closeYear;
+  let highlightedPhoto = null;
   
   // Calculate closeYear:
   closeYear = place.closeDate
   ? new Date(place.closeDate).getFullYear()
   : null;
   
+  
+  afterUpdate(() => {
+    if (place.photos) {
+      for (var i in place.photos) {
+        if (place.photos[i].highlighted === 1) {
+          highlightedPhoto = place.photos[i].url;
+          break;
+        }
+      }
+    }
+  });
+  
 </script>
 
 {#if place.name}
-<h2 class="place-name">{place.name}</h2>
-<h3>
-  {place.category}
-</h3>
-<h4>
-  {#if place.openYear || closeYear }
-    {#if place.openYear}
-      {place.openYear} -
-    {:else}
-      Unknown -
+<div id="place-details">
+  <h2 class="place-name">{place.name}</h2>
+  <h3>
+    {place.category}
+  </h3>
+  <h4>
+    {#if place.openYear || closeYear }
+      {#if place.openYear}
+        {place.openYear} -
+      {:else}
+        Unknown -
+      {/if}
+      {#if closeYear}
+        {closeYear}
+      {:else}
+        Unknown
+      {/if}
     {/if}
-    {#if closeYear}
-      {closeYear}
-    {:else}
-      Unknown
-    {/if}
-  {/if}
-</h4>
-<p class="address">
-  {place.address}<br />
-  {place.city}
-</p>
+  </h4>
+  <p class="address">
+    {place.address}<br />
+    {place.city}
+  </p>
+</div>
+{#if highlightedPhoto}
+    <img src="{highlightedPhoto}" class="highlighted-photo" alt="A photo of {place.name}" />
+{/if}
 {/if}
 
 <style>
+  
+  #place-details {
+    display: inline-block;
+    width: 48%;
+    margin-top: 30px;
+    vertical-align: top;
+  }
+  
+  #place-details h2 {
+    margin-top: 0;
+  }
+  
+  .highlighted-photo {
+    display: inline-block;
+    max-width: 200px;
+    width: 50%;
+    margin-top: 30px;
+    vertical-align: top;
+  }
+  
   .place-name {
     margin-right: 50px;
   }

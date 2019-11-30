@@ -69,6 +69,7 @@ textarea {
   background-color: inherit;
   text-decoration: underline;
   cursor: pointer;
+  z-index: 10;
 }
 
 .memory-list {

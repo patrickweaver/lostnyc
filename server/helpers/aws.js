@@ -50,6 +50,9 @@ async function upload(upload) {
         success: true,
         url: "https://" + bucketName + ".s3.amazonaws.com/" + params.Key
       }
+      
+      console.log("S3 URL:", s3Data.url);
+      
       return(s3Data)
     } else {
       throw "No Data"
@@ -72,7 +75,7 @@ async function getSignedUrl(key) {
   // Using Pre Signed URL:
   
   const url = await s3.getSignedUrl('getObject', params);
-  //console.log("SIGNED URL:", url, typeof url);
+  console.log("SIGNED URL:", url, typeof url);
   return url
 }
 

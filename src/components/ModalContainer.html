@@ -63,7 +63,7 @@
       <Message returnToMap={returnToMap} />
     
     {:else if $modalItem === 'photo'}
-      <Photo returnToMap={returnToMap} />
+      <Photo />
     
     {:else if $modalItem === 'selectedPlace' && $selectedPlace}
       <PlaceInfo

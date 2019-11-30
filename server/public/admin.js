@@ -26,6 +26,42 @@ async function approvePhoto(photoId) {
   }
 }
 
+async function highlightPhoto(photoId) {
+  const url = "/api/photos/highlight";
+  let options = postOptions;
+  options.body = JSON.stringify({
+    apiKey: apiKey,
+    photoId: photoId
+  });
+  const response = await fetch(url, options);
+  const responseJson = await response.json();
+  if (!responseJson.error && responseJson.highlighted) {
+    const photoElement = document.getElementById('review-' + photoId);
+    photoElement.classList.add("highlighted");
+  } else {
+    console.log(responseJson);
+    alert('Error');
+  }
+}
+
+async function unhighlightPhoto(photoId) {
+  const url = "/api/photos/unhighlight";
+  let options = postOptions;
+  options.body = JSON.stringify({
+    apiKey: apiKey,
+    photoId: photoId
+  });
+  const response = await fetch(url, options);
+  const responseJson = await response.json();
+  if (!responseJson.error && responseJson.unhighlighted) {
+    const photoElement = document.getElementById('review-' + photoId);
+    photoElement.classList.add("highlighted");
+  } else {
+    console.log(responseJson);
+    alert('Error');
+  }
+}
+
 async function deletePhoto(photoId) {
   const url = "/api/photos/delete";
   let options = postOptions;

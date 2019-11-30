@@ -25,7 +25,6 @@
       const placeWithMemories = await api.getPlace($selectedPlace.placeId)
 
       if (!placeWithMemories.error) {
-        console.log(new Date());
         placeWithMemories.memories.map(i => shortBody(i));
         selectedPlace.update(n => placeWithMemories);
       } else {
@@ -96,8 +95,10 @@
   
   <PlaceDetails place={$selectedPlace} />
 
-  <Button label={'Add Memory'} type={'create'} onClick={onNewMemoryButtonClick} />
-  <Button label={'Add Photo'} type={'file'} onChange={onNewPhotoInputChange} />
+  <div id="place-buttons">
+    <Button label={'Add Memory'} type={'create'} onClick={onNewMemoryButtonClick} />
+    <Button label={'Add Photo'} type={'file'} onChange={onNewPhotoInputChange} />
+  </div>
   
   {#if $selectedPlace.memories}
   <ul class="memory-list">
@@ -129,5 +130,9 @@
 <style>
   #place-info {
     position: relative;
+  }
+  
+  #place-buttons {
+    width: 100%;
   }
 </style>
