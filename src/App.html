@@ -164,11 +164,11 @@
 
 <div id="title-container-container">
   <div id="title-container">
-    <h2>
+    <h2 style="color: BRAND_HEADER_TEXT_COLOR">
       Lost NYC
     </h2>
     <h4>
-      Presented by the <a class="nycartc" href="http://nycartc.com/" target="_blank">NYC Artist Coalition</a>
+      <span id="subheader">SUBHEADER_TEXT{#if 'SUBHEADER_HREF'}<a href="SUBHEADER_HREF" target="_blank" style="color: BRAND_TEXT_COLOR;">SUBHEADER_LINK_TEXT</a>{/if}</span>
     </h4>
   </div>
   <ul id="app-buttons">
@@ -236,8 +236,8 @@
     display: inline-block;
   }
   
-  .nycartc {
-    color: #fe3d89;
+  #subheader a {
+    /* inline -- color: BRAND_TEXT_COLOR; */
     text-decoration: none;
   }
   

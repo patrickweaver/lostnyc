@@ -3,18 +3,27 @@
   export let type;
   export let onClick;
   export let onChange;
+  
+  let brandCreateButtonColor = 'BRAND_CREATE_BUTTON';
+
 </script>
 
-{#if type === 'file'}
-<label for="photo-picker" class="file-picker-label {type}">{label}</label>
-<input id="photo-picker" type="file" on:change="{onChange}" />
-{:else}
-<button class="button {type}" on:click|preventDefault="{onClick}">{label}</button>
-{/if}
+<div class="button-container" style="--theme-color: {brandCreateButtonColor}">
+  {#if type === 'file'}
+  <label for="photo-picker" class="file-picker-label {type}">{label}</label>
+  <input id="photo-picker" type="file" on:change="{onChange}" />
+  {:else}
+  <button class="button {type}" on:click|preventDefault="{onClick}">{label}</button>
+  {/if}
+</div>
 
 
 
 <style>
+  .button-container {
+    display: inline-block;
+  }
+  
   .button, .file-picker-label {
     border: 2px solid black;
     padding: 5px;
@@ -35,11 +44,11 @@
   }
   
   .create, .file {
-    background-color: #fe3d89;
+    background-color: var(--theme-color);
   }
   
   .create:hover, .file:hover {
-    background-color: #d93476;
+    /* inline -- background-color: BRAND_CREATE_BUTTON_HOVER; */
   }
   
   .cancel {
