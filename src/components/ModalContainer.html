@@ -31,7 +31,9 @@
   }
   
   function memoryTimestamp(memory) {
-    const date = new Date(memory.createdAt.split('.')[0])
+    console.log(memory.createdAt)
+    const date = new Date(memory.createdAt.split(' ')[0])
+    console.log(date);
     const currentYear = (new Date()).getFullYear();
     const year = currentYear === date.getFullYear() ? '' : `, ${date.getFullYear()}`;
     return `on ${months[date.getMonth()]} ${date.getDate()}${year}`;
