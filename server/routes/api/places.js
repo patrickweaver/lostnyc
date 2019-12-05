@@ -196,7 +196,7 @@ router.post("/new", async function(req, res) {
       state: req.body.state,
       zip: req.body.zip,
       openYear: req.body.openYear,
-      closeDate: new Date(req.body.closeDate),
+      closeDate: new Date(req.body.closeYear),
       cityCouncilDistrict: cityCouncilDistrict,
       category: req.body.category
     }

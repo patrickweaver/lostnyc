@@ -145,7 +145,13 @@
     <label>Address:</label>
     <input bind:value="{placeInput.address}" on:keyup="{onNameOrAddressChange}" on:blur="{clearSearchResults}" type="text" autocomplete="off" id="place-address-field" />
     <label>Borough:</label>
-    <input bind:value="{placeInput.borough}" type="text" autocomplete="off" />
+    <select bind:value="{placeInput.borough}">
+      <option value="Bronx">Bronx</option>
+      <option value="Brooklyn">Brooklyn</option>
+      <option value="Manhattan" selected>Manhattan</option>
+      <option value="Queens">Queens</option>
+      <option value="Staten Island">Staten Island</option>
+    </select>
     <label>State:</label>
     <input bind:value="{placeInput.state}" type="text" autocomplete="off" />
     <label>Zip:</label>
@@ -158,8 +164,8 @@
       type="number"
       autocomplete="off"
     />
-    <label>Date Closed:</label>
-    <input bind:value="{placeInput.closeDate}" type="date" autocomplete="off" />
+    <label>Year Closed:</label>
+    <input bind:value="{placeInput.closeYear}" type="text" autocomplete="off" />
     <label>Type of Place:</label>
     <select bind:value={placeInput.category}>
       {#each categories as category}
