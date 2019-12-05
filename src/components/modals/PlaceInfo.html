@@ -108,13 +108,11 @@
         <a href="/#memories/{memory.memoryId}" class="text-button" on:click="{() => seeFullMemory(index)}">
           {#if memory.body.length > 240}
             Read More
-          {:else}
-            <span class="memoryLink">🔗</span>
           {/if}
         </a>
       </p>
       <p>
-        - {#if memory.author}{memory.author}{:else}Anonymous{/if} {memoryTimestamp(memory)}
+        - {#if memory.author}{memory.author}{:else}Anonymous{/if} {memoryTimestamp(memory)} <a href="/#memories/{memory.memoryId}" class="memory-link" on:click="{() => seeFullMemory(index)}">Link</a>
       </p>
     </li>
     {/each}
@@ -134,5 +132,10 @@
   
   #place-buttons {
     width: 100%;
+  }
+  
+  .memory-link {
+    color: #666;
+    font-size: 75%;
   }
 </style>
