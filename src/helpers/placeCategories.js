@@ -1,5 +1,6 @@
 module.exports = [
   'Other',
+  'Arts Space',
   'Bar',
   'Bookstore',
   'Cafe',
