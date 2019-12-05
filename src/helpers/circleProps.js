@@ -18,7 +18,7 @@ module.exports = function(place) {
     color: color[0],
     fillColor: color[1],
     fillOpacity: 0.5,
-    radius: 100,
+    radius: 80,
     placeId: place.placeId
   }
 }
